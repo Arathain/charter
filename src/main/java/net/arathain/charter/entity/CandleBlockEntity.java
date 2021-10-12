@@ -6,7 +6,6 @@ import net.arathain.charter.item.ContractItem;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -15,25 +14,44 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Optional;
 import java.util.UUID;
 
 
 public class CandleBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
-
-    public static Optional<UUID> indebtedUUID;
+    private static UUID indebted = null;
     private static boolean full;
     public CandleBlockEntity(BlockPos pos, BlockState state) {
         super(Charter.CANDLE_ENTITY, pos, state);
     }
+
+
+    public static UUID getIndebted() {
+        return indebted;
+    }
+    public void setIndebted(UUID indebted) {
+        CandleBlockEntity.indebted = indebted;
+    }
+    public boolean getFull() {
+        return full;
+    }
+
     @Override
     public void fromClientTag(NbtCompound tag) {
-        indebtedUUID = Optional.ofNullable(tag.getUuid("IndebtedUUID"));
+        if(tag.containsUuid("Indebted")) {
+            indebted = tag.getUuid("Indebted");
+        }
+        if(tag.contains("Full")) {
+            full = tag.getBoolean("Full");
+        }
+
     }
 
     @Override
     public NbtCompound toClientTag(NbtCompound tag) {
-        indebtedUUID.ifPresent(uuid -> tag.putUuid("IndebtedUUID", uuid));
+        if(getIndebted() != null) {
+            tag.putUuid("IndebtedUUID", getIndebted());
+        }
+        tag.putBoolean("Full", full);
         return tag;
     }
 
@@ -48,14 +66,14 @@ public class CandleBlockEntity extends BlockEntity implements BlockEntityClientS
         return super.writeNbt(toClientTag(nbt));
     }
     public static boolean isFilled(CandleBlockEntity entity) {
-        return entity.full;
+        return entity.getFull();
     }
 
     public void onUse(World world, BlockPos pos, PlayerEntity player, Hand hand) {
         if (!getCachedState().get(Properties.WATERLOGGED)) {
             ItemStack stack = player.getStackInHand(hand);
             if (getCachedState().get(Properties.LIT) && stack.getItem() instanceof ContractItem && ContractItem.isViable(stack) && !full) {
-                indebtedUUID = Optional.ofNullable(ContractItem.getIndebtedUUID(stack));
+                setIndebted(ContractItem.getIndebtedUUID(stack));
                 ((Bindable) player).setIndebted(false);
                 full = true;
                 ContractItem.removeDebt(stack);
@@ -64,12 +82,12 @@ public class CandleBlockEntity extends BlockEntity implements BlockEntityClientS
         markDirty();
     }
     public static void tick(World world, BlockPos pos, BlockState state, CandleBlockEntity blockEntity) {
-        if (world != null) {
-            PlayerEntity indebted = world.getPlayerByUuid(indebtedUUID.get());
-            if(!state.get(Properties.LIT) && full && indebtedUUID.isPresent() && indebted != null) {
-                blockEntity.full = false;
-               indebted.remove(Entity.RemovalReason.KILLED);
-               indebtedUUID = Optional.empty();
+        if (world != null && getIndebted() != null) {
+            PlayerEntity indebt = world.getPlayerByUuid(indebted);
+            if(!state.get(Properties.LIT) && full && indebt != null) {
+               full = false;
+               indebt.kill();
+               indebt = null;
             }
         }
     }

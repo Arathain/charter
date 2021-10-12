@@ -40,7 +40,7 @@ public abstract class CandleBlockMixin extends AbstractCandleBlock implements Wa
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if ((Boolean)state.get(LIT)) {
-            if( CandleBlockEntity.isFilled((CandleBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos)))) {
+            if(((CandleBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).getFull()) {
                 this.getParticleOffsets(state).forEach((offset) -> {
                     spawnCandleParticles(world, offset.add((double) pos.getX(), (double) pos.getY(), (double) pos.getZ()), random, ParticleTypes.SOUL_FIRE_FLAME);
                 });
