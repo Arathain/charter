@@ -9,11 +9,16 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.Random;
 import java.util.UUID;
 
 
@@ -31,8 +36,8 @@ public class CandleBlockEntity extends BlockEntity implements BlockEntityClientS
     public void setIndebted(UUID indebted) {
         CandleBlockEntity.indebted = indebted;
     }
-    public boolean getFull() {
-        return full;
+    public static boolean getFull() {
+        return indebted != null;
     }
 
     @Override
@@ -44,6 +49,21 @@ public class CandleBlockEntity extends BlockEntity implements BlockEntityClientS
             full = tag.getBoolean("Full");
         }
 
+    }
+
+    public static void spawnCandleParticles(World world, Vec3d vec3d, Random random) {
+        float f = random.nextFloat();
+        if (f < 0.3F) {
+            world.addParticle(ParticleTypes.SMOKE, vec3d.x, vec3d.y, vec3d.z, 0.0D, 0.0D, 0.0D);
+            if (f < 0.17F) {
+                world.playSound(vec3d.x + 0.5D, vec3d.y + 0.5D, vec3d.z + 0.5D, SoundEvents.BLOCK_CANDLE_AMBIENT, SoundCategory.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
+            }
+        }
+        if(getFull()) {
+        world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, vec3d.x, vec3d.y, vec3d.z, 0.0D, 0.0D, 0.0D);
+        } else {
+            world.addParticle(ParticleTypes.SMALL_FLAME, vec3d.x, vec3d.y, vec3d.z, 0.0D, 0.0D, 0.0D);
+        }
     }
 
     @Override
@@ -64,9 +84,6 @@ public class CandleBlockEntity extends BlockEntity implements BlockEntityClientS
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         return super.writeNbt(toClientTag(nbt));
-    }
-    public static boolean isFilled(CandleBlockEntity entity) {
-        return entity.getFull();
     }
 
     public void onUse(World world, BlockPos pos, PlayerEntity player, Hand hand) {
