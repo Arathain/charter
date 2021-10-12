@@ -1,5 +1,6 @@
 package net.arathain.charter.item;
 
+import net.arathain.charter.entity.Bindable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -29,9 +30,12 @@ public class ContractItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
-        user.setStackInHand(hand, putContract(stack, user));
 
+        ItemStack stack = user.getStackInHand(hand);
+        if(!isViable(stack) && !((Bindable)user).getIndebted()) {
+            user.setStackInHand(hand, putContract(stack, user));
+            ((Bindable) user).setIndebted(true);
+        }
         return TypedActionResult.success(user.getStackInHand(hand));
     }
 
