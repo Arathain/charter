@@ -1,9 +1,13 @@
 package net.arathain.charter.mixin;
 
+import net.arathain.charter.Charter;
 import net.arathain.charter.entity.Bindable;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
@@ -37,6 +41,20 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Bindable
     @Inject(method = "initDataTracker", at = @At("HEAD"))
     public void initTracker(CallbackInfo info) {
         dataTracker.startTracking(INDEBTED, false);
+    }
+
+    @Inject(method = "damage", at = @At("HEAD"))
+    public void dammage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if(this.hasStatusEffect(Charter.SOUL_STRAIN)) {
+            amount = amount * 2;
+        }
+    }
+
+    @Inject(method = "tick()V", at = @At("HEAD"))
+    public void tick(CallbackInfo ci) {
+        if(getIndebted() && !hasStatusEffect(StatusEffects.UNLUCK)) {
+            addStatusEffect(new StatusEffectInstance(Charter.SOUL_STRAIN, 160, 0));
+        }
     }
 
     public void setIndebted(boolean indebted) {

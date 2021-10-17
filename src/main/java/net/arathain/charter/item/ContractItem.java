@@ -32,7 +32,7 @@ public class ContractItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 
         ItemStack stack = user.getStackInHand(hand);
-        if(!isViable(stack) && !((Bindable)user).getIndebted()) {
+        if(!isViable(stack)) {
             user.setStackInHand(hand, putContract(stack, user));
             ((Bindable) user).setIndebted(true);
         }

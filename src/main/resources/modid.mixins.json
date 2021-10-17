@@ -4,7 +4,6 @@
   "package": "net.arathain.charter.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "CandleBlockMixin",
     "PlayerEntityMixin"
   ],
   "client": [
