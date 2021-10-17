@@ -17,6 +17,7 @@
   "icon": "assets/charter/icon.png",
 
   "environment": "*",
+  "accessWidener" : "charter.accesswidener",
   "entrypoints": {
     "main": [
       "net.arathain.charter.Charter"

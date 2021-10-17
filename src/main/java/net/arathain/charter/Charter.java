@@ -1,11 +1,9 @@
 package net.arathain.charter;
 
 import net.arathain.charter.item.ContractItem;
+import net.arathain.charter.item.EternalSealItem;
 import net.arathain.charter.item.MerchantCrestItem;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -22,12 +20,14 @@ public class Charter implements ModInitializer {
 	public static String MODID = "charter";
 	public static final Item CONTRACT = new ContractItem( new Item.Settings().maxCount(1).rarity(Rarity.RARE).group(ItemGroup.MISC));
 	public static final Item MERCHANT_CREST = new MerchantCrestItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC).group(ItemGroup.MISC));
-	public static final StatusEffect SOUL_STRAIN = new SoulStrainStatusEffect(StatusEffectType.NEUTRAL, 0x4bf1f7);
+	public static final Item ETERNAL_SEAL = new EternalSealItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC).group(ItemGroup.MISC));
+	public static final StatusEffect ETERNAL_DEBT = new EternalDebtStatusEffect(StatusEffectType.NEUTRAL, 0x4bf1f7);
 	@Override
 	public void onInitialize() {
 		Registry.register(Registry.ITEM, new Identifier(MODID, "contract"), CONTRACT);
 		Registry.register(Registry.ITEM, new Identifier(MODID, "merchant_crest"), MERCHANT_CREST);
-		Registry.register(Registry.STATUS_EFFECT, new Identifier(MODID, "soul_strain"), SOUL_STRAIN);
+		Registry.register(Registry.ITEM, new Identifier(MODID, "eternal_seal"), ETERNAL_SEAL);
+		Registry.register(Registry.STATUS_EFFECT, new Identifier(MODID, "eternal_debt"), ETERNAL_DEBT);
 	}
 
 	public static class DataTrackers {

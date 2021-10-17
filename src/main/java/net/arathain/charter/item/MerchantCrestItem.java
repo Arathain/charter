@@ -44,7 +44,6 @@ public class MerchantCrestItem extends Item {
                                 if(nearbyEntity.getUuid() == ContractItem.getIndebtedUUID(stack2) && player.getHealth() < player.getMaxHealth() && nearbyEntity.getHealth() > 1) {
                                     player.heal(1);
                                     nearbyEntity.damage(DamageSource.MAGIC, 1);
-                                    nearbyEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.UNLUCK, 160, 0));
                                 }
                             }
 
