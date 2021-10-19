@@ -1,16 +1,13 @@
 package net.arathain.charter.item;
 
-import net.arathain.charter.entity.Bindable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -18,7 +15,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -30,13 +26,13 @@ public class ContractItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-
         ItemStack stack = user.getStackInHand(hand);
         if(!isViable(stack)) {
             user.setStackInHand(hand, putContract(stack, user));
-            ((Bindable) user).setIndebted(true);
+            return TypedActionResult.success(user.getStackInHand(hand));
+        } else {
+            return TypedActionResult.pass(user.getStackInHand(hand));
         }
-        return TypedActionResult.success(user.getStackInHand(hand));
     }
 
     @Environment(EnvType.CLIENT)
@@ -63,7 +59,9 @@ public class ContractItem extends Item {
     }
 
     public static boolean isViable(ItemStack stack) {
-        return stack.hasNbt() && stack.getOrCreateNbt().contains("IndebtedUUID");
+        if (!stack.hasNbt()) return false;
+        assert stack.getNbt() != null;
+        return stack.getNbt().contains("IndebtedUUID") && stack.getOrCreateNbt().getUuid("IndebtedUUID") != null;
     }
 
     public static void removeDebt(ItemStack stack) {

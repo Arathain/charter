@@ -4,8 +4,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
 
-public class EternalDebtStatusEffect extends StatusEffect {
-    protected EternalDebtStatusEffect(StatusEffectType type, int color) {
+public class CharterStatusEffect extends StatusEffect {
+    protected CharterStatusEffect(StatusEffectType type, int color) {
         super(type, color);
     }
 

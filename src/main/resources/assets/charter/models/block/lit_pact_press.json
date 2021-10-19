@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "charter:block/pact_press_top",
+    "bottom": "charter:block/pact_press_top",
+    "side": "charter:block/pact_press_side_lit"
+  }
+}
