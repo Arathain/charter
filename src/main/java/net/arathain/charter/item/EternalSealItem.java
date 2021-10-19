@@ -2,18 +2,14 @@ package net.arathain.charter.item;
 
 import net.arathain.charter.Charter;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.List;
+import java.util.Optional;
 
 public class EternalSealItem extends Item {
     public EternalSealItem(Settings settings) {
@@ -26,15 +22,13 @@ public class EternalSealItem extends Item {
         {
             ServerPlayerEntity player = (ServerPlayerEntity) entity;
 
-            for(int i = 0; i < player.getInventory().size(); i++)
-            {
-                ItemStack stack2 = player.getInventory().getStack(i);
-                if(!stack2.isEmpty() && ContractItem.isViable(stack))
-                {
-                    PlayerEntity indebted = world.getPlayerByUuid(ContractItem.getIndebtedUUID(stack));
-                    indebted.addStatusEffect(new StatusEffectInstance(Charter.ETERNAL_DEBT, 160, 0));
-                    break;
-
+            for (ItemStack itemStack : player.getInventory().main) {
+                if(!itemStack.isEmpty() && ContractItem.isViable(itemStack)) {
+                     if(world.getPlayerByUuid(ContractItem.getIndebtedUUID(itemStack)) != null && world.getPlayerByUuid(ContractItem.getIndebtedUUID(itemStack)) != player) {
+                         PlayerEntity indebted = world.getPlayerByUuid(ContractItem.getIndebtedUUID(itemStack));
+                         assert indebted != null;
+                         indebted.addStatusEffect(new StatusEffectInstance(Charter.ETERNAL_DEBT, 1600, 0));
+                     }
                 }
             }
 

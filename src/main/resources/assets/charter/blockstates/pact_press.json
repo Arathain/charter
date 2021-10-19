@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "charter:block/pact_press"
+    },
+    "lit=true": {
+      "model": "charter:block/lit_pact_press"
+    }
+  }
+}

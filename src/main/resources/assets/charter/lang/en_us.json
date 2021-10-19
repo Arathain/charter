@@ -2,5 +2,6 @@
   "item.charter.contract": "Contract",
   "item.charter.merchant_crest": "Merchant's Crest",
   "item.charter.eternal_seal": "Eternal Seal",
-  "effect.charter.eternal_debt": "Eternal Indenture"
+  "effect.charter.eternal_debt": "Eternal Indenture",
+  "block.charter.pact_press": "Pact Press"
 }
