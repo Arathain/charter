@@ -1,0 +1,25 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "IPI",
+    "TPT",
+    "IWI"
+  ],
+  "key": {
+    "T": {
+      "item": "deepslate_tiles"
+    },
+    "P": {
+      "item": "charter:pact_press"
+    },
+    "I": {
+      "item": "iron_ingot"
+    },
+    "W": {
+      "item": "nether_star"
+    }
+  },
+  "result": {
+    "item": "charter:eternal_seal"
+  }
+}

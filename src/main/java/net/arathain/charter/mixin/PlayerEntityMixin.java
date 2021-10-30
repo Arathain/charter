@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -28,15 +29,18 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
     @Shadow protected HungerManager hungerManager;
 
-    @Inject(method = "tick()V", at = @At("HEAD"))
-    public void timck() {
+    @Inject(method = "tick()V", at = @At("TAIL"))
+    public void tik(CallbackInfo info) {
         if (this.hasStatusEffect(Charter.ETERNAL_DEBT) && this.world.isClient) {
-            world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getX(), this.getY() - 0.5, this.getZ(), random.nextGaussian() / 16, 1, random.nextGaussian() / 16);
+            world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getX() + random.nextGaussian() / 16, this.getY(), this.getZ() + random.nextGaussian() / 16, random.nextGaussian() / 30, 0.01, random.nextGaussian() / 30);
         }
         if (this.hasStatusEffect(Charter.ETERNAL_DEBT) && !this.world.isClient) {
             hungerManager.setSaturationLevel(0);
-            if (this.getEntityWorld().getBiomeKey(this.getBlockPos()).equals(Optional.of(BiomeKeys.RIVER)) && this.isInsideWaterOrBubbleColumn()) {
-                this.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 40, 1));
+            if (this.isInsideWaterOrBubbleColumn()) {
+                if (this.getEntityWorld().getBiomeKey(this.getBlockPos()).equals(Optional.of(BiomeKeys.RIVER))) {
+                    this.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 60, 2, false, false));
+                }
+                this.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 40, 1, false, false));
             }
         }
     }

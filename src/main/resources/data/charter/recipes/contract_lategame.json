@@ -1,0 +1,25 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "LWP",
+    "LSP"
+  ],
+  "key": {
+    "P": {
+      "item": "paper"
+    },
+    "W": {
+      "item": "wither_rose"
+    },
+    "L": {
+      "item": "leather"
+    },
+    "S": {
+      "tag": "soul_fire_base_blocks"
+    }
+  },
+  "result": {
+    "item": "charter:contract"
+  }
+}
+

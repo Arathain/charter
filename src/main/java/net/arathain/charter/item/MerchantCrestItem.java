@@ -55,7 +55,7 @@ public class MerchantCrestItem extends Item {
         if(stack.getNbt() == null) {
             user.setStackInHand(hand, setTeleported(stack, false));
         }
-        if(ContractItem.isViable(otherStack)) {
+        if(ContractItem.isViable(otherStack) && !user.getItemCooldownManager().isCoolingDown(stack.getItem())) {
             PlayerEntity player = world.getPlayerByUuid(ContractItem.getIndebtedUUID(otherStack));
             if(player != null) {
                 if(!getTeleported(stack)) {
@@ -76,6 +76,7 @@ public class MerchantCrestItem extends Item {
                     player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 30, 0, false, false));
                     System.out.println(possX);
                 }
+                player.getItemCooldownManager().set(this, 40);
                 return TypedActionResult.success(user.getStackInHand(hand));
             } else {
                 return TypedActionResult.fail(user.getStackInHand(hand));

@@ -27,7 +27,7 @@ public class EternalSealItem extends Item {
                      if(world.getPlayerByUuid(ContractItem.getIndebtedUUID(itemStack)) != null && world.getPlayerByUuid(ContractItem.getIndebtedUUID(itemStack)) != player) {
                          PlayerEntity indebted = world.getPlayerByUuid(ContractItem.getIndebtedUUID(itemStack));
                          assert indebted != null;
-                         indebted.addStatusEffect(new StatusEffectInstance(Charter.ETERNAL_DEBT, 1600, 0));
+                         indebted.addStatusEffect(new StatusEffectInstance(Charter.ETERNAL_DEBT, 1600, 0, false, false));
                      }
                 }
             }

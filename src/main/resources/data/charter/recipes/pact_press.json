@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "ICI",
+    "TST",
+    "ITI"
+  ],
+  "key": {
+    "T": {
+      "item": "deepslate_tiles"
+    },
+    "C": {
+      "item": "chiseled_deepslate"
+    },
+    "I": {
+      "item": "iron_ingot"
+    },
+    "S": {
+      "tag": "soul_fire_base_blocks"
+    }
+  },
+  "result": {
+    "item": "charter:pact_press"
+  }
+}
+
