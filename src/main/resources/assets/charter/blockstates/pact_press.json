@@ -1,10 +1,35 @@
 {
   "variants": {
-    "lit=false": {
+    "facing=south,lit=false": {
       "model": "charter:block/pact_press"
     },
-    "lit=true": {
-      "model": "charter:block/lit_pact_press"
+    "facing=west,lit=false": {
+      "model": "charter:block/pact_press",
+      "y": 90
+    },
+    "facing=north,lit=false": {
+      "model": "charter:block/pact_press",
+      "y": 180
+    },
+    "facing=east,lit=false": {
+      "model": "charter:block/pact_press",
+      "y": 270
+    },
+    "facing=south,lit=true": {
+      "model": "charter:block/pact_press_lit"
+    },
+    "facing=west,lit=true": {
+      "model": "charter:block/pact_press_lit",
+      "y": 90
+    },
+    "facing=north,lit=true": {
+      "model": "charter:block/pact_press_lit",
+      "y": 180
+    },
+    "facing=east,lit=true": {
+      "model": "charter:block/pact_press_lit",
+      "y": 270
     }
+
   }
 }

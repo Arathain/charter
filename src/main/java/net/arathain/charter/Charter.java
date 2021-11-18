@@ -1,6 +1,7 @@
 package net.arathain.charter;
 
 import net.arathain.charter.block.PactPressBlock;
+import net.arathain.charter.block.SwapperBlock;
 import net.arathain.charter.block.entity.PactPressBlockEntity;
 import net.arathain.charter.item.ContractItem;
 import net.arathain.charter.item.EternalSealItem;
@@ -39,6 +40,7 @@ public class Charter implements ModInitializer {
 	public static final Item ETERNAL_SEAL = new EternalSealItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC).group(ItemGroup.COMBAT));
 	public static final StatusEffect ETERNAL_DEBT = new CharterStatusEffect(StatusEffectType.NEUTRAL, 0x4bf1f7);
 	public static final Block PACT_PRESS = new PactPressBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).ticksRandomly());
+	public static final Block SWAPPER = new SwapperBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE));
 	public static BlockEntityType<PactPressBlockEntity> PACT_PRESS_ENTITY;
 	@Override
 	public void onInitialize() {
@@ -47,6 +49,8 @@ public class Charter implements ModInitializer {
 		Registry.register(Registry.ITEM, new Identifier(MODID, "eternal_seal"), ETERNAL_SEAL);
 		Registry.register(Registry.ITEM, new Identifier(MODID, "pact_press"), new BlockItem(PACT_PRESS, new FabricItemSettings().group(ItemGroup.COMBAT)));
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "pact_press"), PACT_PRESS);
+		Registry.register(Registry.ITEM, new Identifier(MODID, "swapper"), new BlockItem(SWAPPER, new FabricItemSettings().group(ItemGroup.REDSTONE)));
+		Registry.register(Registry.BLOCK, new Identifier(MODID, "swapper"), SWAPPER);
 		PACT_PRESS_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "pact_press"), FabricBlockEntityTypeBuilder.create(PactPressBlockEntity::new, PACT_PRESS).build(null));
 		Registry.register(Registry.STATUS_EFFECT, new Identifier(MODID, "eternal_debt"), ETERNAL_DEBT);
 		LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, identifier, fabricLootSupplierBuilder, lootTableSetter) -> {
