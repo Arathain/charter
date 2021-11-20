@@ -4,6 +4,7 @@ import net.arathain.charter.Charter;
 import net.arathain.charter.item.ContractItem;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -15,6 +16,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 public class PactPressBlockEntity extends BlockEntity implements BlockEntityClientSerializable, AelpecyemIsCool {
@@ -29,11 +31,12 @@ public class PactPressBlockEntity extends BlockEntity implements BlockEntityClie
 
     public static void tick(World tickerWorld, BlockPos pos, BlockState tickerState, PactPressBlockEntity blockEntity) {
         if (tickerWorld != null) {
-            if (tickerState.get(Properties.LIT) && blockEntity.isValid(0, blockEntity.getContract())) {
-                if(!tickerWorld.isClient() && tickerWorld.getPlayerByUuid(ContractItem.getIndebtedUUID(blockEntity.getContract())) != null) {
+            BlockState state = tickerWorld.getBlockState(pos.offset(Direction.DOWN).offset(Direction.DOWN));
+            if (tickerState.get(Properties.LIT) && blockEntity.isValid(0, blockEntity.getContract()) && state.isOf(Blocks.SOUL_FIRE) || state.isOf(Blocks.SOUL_LANTERN) || state.isOf(Blocks.SOUL_CAMPFIRE) || state.isOf(Blocks.SOUL_TORCH)) {
+                if(!tickerWorld.isClient() && ContractItem.getIndebtedUUID(blockEntity.getContract()) != null && tickerWorld.getPlayerByUuid(ContractItem.getIndebtedUUID(blockEntity.getContract())) != null) {
                     PlayerEntity player = tickerWorld.getPlayerByUuid(ContractItem.getIndebtedUUID(blockEntity.getContract()));
                     assert player != null;
-
+                    player.addStatusEffect(new StatusEffectInstance(Charter.SOUL_STRAIN, 1600, 0, true, true));
                 }
             }
         }

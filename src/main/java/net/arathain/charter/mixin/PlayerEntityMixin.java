@@ -8,16 +8,18 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeKeys;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -41,6 +43,38 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                     this.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 60, 2, false, false));
                 }
                 this.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 40, 1, false, false));
+            }
+        }
+    }
+
+    @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
+    private void dmg(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (this.hasStatusEffect(Charter.SOUL_STRAIN) && !this.world.isClient) {
+            source.setUsesMagic();
+            amount = amount * 2;
+            if (this.isInvulnerableTo(source)) {
+                cir.setReturnValue(false);
+            } else {
+                this.despawnCounter = 0;
+                if (this.isDead()) {
+                    cir.setReturnValue(false);
+                } else {
+                    if (source.isScaledWithDifficulty()) {
+                        if (this.world.getDifficulty() == Difficulty.PEACEFUL) {
+                            amount = 0.0F;
+                        }
+
+                        if (this.world.getDifficulty() == Difficulty.EASY) {
+                            amount = Math.min(amount / 2.0F + 1.0F, amount);
+                        }
+
+                        if (this.world.getDifficulty() == Difficulty.HARD) {
+                            amount = amount * 3.0F / 2.0F;
+                        }
+                    }
+
+                    cir.setReturnValue(amount != 0.0F && super.damage(source, amount));
+                }
             }
         }
     }

@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "axis=y,powered=false": {
+      "model": "charter:block/swapper"
+    },
+    "axis=z,powered=false": {
+      "model": "charter:block/swapper",
+      "x": 90
+    },
+    "axis=x,powered=false": {
+      "model": "charter:block/swapper",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,powered=true": {
+      "model": "charter:block/swapper_activated"
+    },
+    "axis=z,powered=true": {
+      "model": "charter:block/swapper_activated",
+      "x": 90
+    },
+    "axis=x,powered=true": {
+      "model": "charter:block/swapper_activated",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

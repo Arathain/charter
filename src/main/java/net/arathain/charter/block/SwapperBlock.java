@@ -13,10 +13,15 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.command.GameModeCommand;
+import net.minecraft.server.command.TeleportCommand;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -74,73 +79,91 @@ public class SwapperBlock extends PillarBlock {
                                     press1.markDirty();
                                     press2.markDirty();
                                     if(player1 != null && player2 != null) {
-                                        PlayerInventory inv1 = player1.getInventory();
-                                        PlayerInventory inv2 = player2.getInventory();
-                                        float health1 = player1.getHealth();
-                                        float health2 = player2.getHealth();
-                                        Collection<StatusEffectInstance> statusEffects1 = player1.getStatusEffects();
-                                        Collection<StatusEffectInstance> statusEffects2 = player1.getStatusEffects();
-                                        Vec3d pPos1 = player1.getPos();
-                                        Vec3d pPos2 = player2.getPos();
-                                        Vec3d velocity1 = player1.getVelocity();
-                                        Vec3d velocity2 = player2.getVelocity();
-                                        if (Impersonator.get(player1).getImpersonatedProfile() != null && Impersonator.get(player2).getImpersonatedProfile() != null) {
+                                        boolean bool = player1.getEntityWorld() == player2.getEntityWorld();
+                                        if (bool) {
+                                            PlayerInventory inv1 = player1.getInventory();
+                                            PlayerInventory inv2 = player2.getInventory();
+                                            float pitch1 = player1.getPitch();
+                                            float yaw1 = player1.getYaw();
+                                            float pitch2 = player2.getPitch();
+                                            float yaw2 = player2.getYaw();
+                                            float health1 = player1.getHealth();
+                                            float health2 = player2.getHealth();
+                                            Collection<StatusEffectInstance> statusEffects1 = player1.getStatusEffects();
+                                            Collection<StatusEffectInstance> statusEffects2 = player1.getStatusEffects();
+                                            Vec3d pPos1 = player1.getPos();
+                                            Vec3d pPos2 = player2.getPos();
+                                            if (Impersonator.get(player1).getImpersonatedProfile() != null && Impersonator.get(player2).getImpersonatedProfile() != null) {
 
-                                            GameProfile profile1 = Impersonator.get(player1).getImpersonatedProfile();
-                                            GameProfile profile2 = Impersonator.get(player2).getImpersonatedProfile();
-
-
-                                            Impersonator.get(player1).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile2));
-                                            Impersonator.get(player2).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile1));
-                                        } if (Impersonator.get(player1).getImpersonatedProfile() == null && Impersonator.get(player2).getImpersonatedProfile() != null) {
-
-                                            GameProfile profile1 = Impersonator.get(player1).getActualProfile();
-                                            GameProfile profile2 = Impersonator.get(player2).getImpersonatedProfile();
+                                                GameProfile profile1 = Impersonator.get(player1).getImpersonatedProfile();
+                                                GameProfile profile2 = Impersonator.get(player2).getImpersonatedProfile();
 
 
-                                            Impersonator.get(player1).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile2));
-                                            Impersonator.get(player2).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile1));
-                                        } if (Impersonator.get(player1).getImpersonatedProfile() != null && Impersonator.get(player2).getImpersonatedProfile() == null) {
+                                                Impersonator.get(player1).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile2));
+                                                Impersonator.get(player2).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile1));
+                                            }
+                                            if (Impersonator.get(player1).getImpersonatedProfile() == null && Impersonator.get(player2).getImpersonatedProfile() != null) {
 
-                                            GameProfile profile1 = Impersonator.get(player1).getImpersonatedProfile();
-                                            GameProfile profile2 = Impersonator.get(player2).getActualProfile();
-
-
-                                            Impersonator.get(player1).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile2));
-                                            Impersonator.get(player2).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile1));
-                                        }
-                                        if (Impersonator.get(player1).getImpersonatedProfile() == null && Impersonator.get(player2).getImpersonatedProfile() == null) {
-
-                                            GameProfile profile1 = Impersonator.get(player1).getActualProfile();
-                                            GameProfile profile2 = Impersonator.get(player2).getActualProfile();
+                                                GameProfile profile1 = Impersonator.get(player1).getActualProfile();
+                                                GameProfile profile2 = Impersonator.get(player2).getImpersonatedProfile();
 
 
-                                            Impersonator.get(player1).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile2));
-                                            Impersonator.get(player2).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile1));
-                                        }
+                                                Impersonator.get(player1).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile2));
+                                                Impersonator.get(player2).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile1));
+                                            }
+                                            if (Impersonator.get(player1).getImpersonatedProfile() != null && Impersonator.get(player2).getImpersonatedProfile() == null) {
 
+                                                GameProfile profile1 = Impersonator.get(player1).getImpersonatedProfile();
+                                                GameProfile profile2 = Impersonator.get(player2).getActualProfile();
+
+
+                                                Impersonator.get(player1).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile2));
+                                                Impersonator.get(player2).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile1));
+                                            }
+                                            if (Impersonator.get(player1).getImpersonatedProfile() == null && Impersonator.get(player2).getImpersonatedProfile() == null) {
+
+                                                GameProfile profile1 = Impersonator.get(player1).getActualProfile();
+                                                GameProfile profile2 = Impersonator.get(player2).getActualProfile();
+
+
+                                                Impersonator.get(player1).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile2));
+                                                Impersonator.get(player2).impersonate(IMPERSONATE_IDENTIFIER, Objects.requireNonNull(profile1));
+                                            }
+
+                                            //hacky workaround
+                                            DefaultedList<ItemStack> scuffedList1 = DefaultedList.ofSize(41);
+                                            for (int i = 0; i < 42; i++) {
+                                                scuffedList1.add(i, inv1.getStack(i));
+                                            }
 
                                             player1.setHealth(health2);
                                             player1.clearStatusEffects();
-                                            for(StatusEffectInstance instance : statusEffects2) {
+                                            for (StatusEffectInstance instance : statusEffects2) {
                                                 if (instance.getEffectType() != Charter.ETERNAL_DEBT) {
                                                     player1.addStatusEffect(instance);
                                                 }
                                             }
-                                            player1.setPosition(pPos2);
-                                            player1.setVelocity(velocity2);
-                                            player1.getInventory().clone(inv2);
+                                            player1.requestTeleport(pPos2.x, pPos2.y, pPos2.z);
+                                            player1.setYaw(yaw2);
+                                            player1.setPitch(pitch2);
+                                            for (int i = 0; i < 42; i++) {
+                                                player1.getInventory().setStack(i, inv2.getStack(i));
 
-
+                                            }
 
                                             player2.setHealth(health1);
                                             player2.clearStatusEffects();
-                                            for(StatusEffectInstance instance : statusEffects1) {
+                                            for (StatusEffectInstance instance : statusEffects1) {
                                                 player2.addStatusEffect(instance);
                                             }
-                                            player2.setPosition(pPos1);
-                                            player2.setVelocity(velocity1);
-                                            player2.getInventory().clone(inv1);
+                                            player2.requestTeleport(pPos1.x, pPos1.y, pPos1.z);
+                                            player2.setYaw(yaw1);
+                                            player2.setPitch(pitch1);
+
+                                            for (int i = 0; i < 42; i++) {
+                                                player2.getInventory().setStack(i, scuffedList1.get(i));
+                                            }
+                                        }
 
 
                                     }

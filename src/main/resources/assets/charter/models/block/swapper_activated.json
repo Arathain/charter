@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "charter:block/swapper_top",
+    "side": "charter:block/swapper2"
+  }
+}
