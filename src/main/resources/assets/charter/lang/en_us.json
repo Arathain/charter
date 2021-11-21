@@ -3,6 +3,7 @@
   "item.charter.merchant_crest": "Merchant's Crest",
   "item.charter.eternal_seal": "Eternal Pact",
   "effect.charter.eternal_debt": "Eternal Indenture",
+  "effect.charter.soul_strain": "Soul Strain",
   "block.charter.pact_press": "Pact Vessel",
   "block.charter.swapper": "Soul Sand Swapper"
 }

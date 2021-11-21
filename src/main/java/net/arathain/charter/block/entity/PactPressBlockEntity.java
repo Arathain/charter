@@ -36,7 +36,7 @@ public class PactPressBlockEntity extends BlockEntity implements BlockEntityClie
                 if(!tickerWorld.isClient() && ContractItem.getIndebtedUUID(blockEntity.getContract()) != null && tickerWorld.getPlayerByUuid(ContractItem.getIndebtedUUID(blockEntity.getContract())) != null) {
                     PlayerEntity player = tickerWorld.getPlayerByUuid(ContractItem.getIndebtedUUID(blockEntity.getContract()));
                     assert player != null;
-                    player.addStatusEffect(new StatusEffectInstance(Charter.SOUL_STRAIN, 1600, 0, true, true));
+                    player.addStatusEffect(new StatusEffectInstance(Charter.SOUL_STRAIN, 16000, 0, true, true));
                 }
             }
         }
