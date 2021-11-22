@@ -21,11 +21,19 @@
   "entrypoints": {
     "main": [
       "net.arathain.charter.Charter"
+    ],
+    "cardinal-components-world": [
+      "net.arathain.charter.components.CharterComponents"
     ]
   },
   "mixins": [
     "charter.mixins.json"
   ],
+  "custom": {
+    "cardinal-components": [
+      "charter:charter_key"
+    ]
+  },
 
   "depends": {
     "fabricloader": ">=0.11.3",

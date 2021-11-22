@@ -1,5 +1,6 @@
 package net.arathain.charter.components;
 
+import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.arathain.charter.Charter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -11,21 +12,24 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.UUID;
 
-public class CharterComponent {
-	public final List<Box> area = new ArrayList<>();
-	public final List<UUID> members = new ArrayList<>();
+public class CharterComponent implements SendHelpComponent {
 	private BlockPos charterStonePos;
 	private UUID owner;
+	private World world;
+
+	public CharterComponent(World world) {
+		this.world = world;
+	}
 
 	public CharterComponent(BlockPos charterStone, PlayerEntity owner, World world) {
 		this.charterStonePos = charterStone;
 		this.owner = owner.getUuid();
 		this.area.add(Box.of(Vec3d.of(charterStone), 15, 15, 15));
 		this.members.add(this.owner);
+		this.world = world;
 	}
 
 	public BlockPos getCharterStonePos() {
@@ -36,7 +40,7 @@ public class CharterComponent {
 		return owner;
 	}
 
-	public void writeNbt(NbtCompound tag) {
+	public void writeToNbt(NbtCompound tag) {
 		NbtCompound rootTag = new NbtCompound();
 		NbtList areaListTag = new NbtList();
 		NbtList memberListTag = new NbtList();
@@ -62,7 +66,7 @@ public class CharterComponent {
 		rootTag.put("CharterMembers", memberListTag);
 	}
 
-	public void readNbt(NbtCompound tag) {
+	public void readFromNbt(NbtCompound tag) {
 		NbtCompound rootTag = tag.getCompound(Charter.MODID);
 		NbtList areaListTag = tag.getList("CharterArea", NbtElement.COMPOUND_TYPE);
 		NbtList memberListTag = tag.getList("CharterMembers", NbtElement.INT_ARRAY_TYPE);
