@@ -27,6 +27,7 @@ repositories {
 		name = "Nexus Repository Manager"
 		url = 'https://oss.sonatype.org/content/repositories/snapshots'
 	}
+	maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
 }
 
 dependencies {
@@ -47,6 +48,8 @@ dependencies {
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${project.cca_version}"
+	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.17:3.0.29'
+
 }
 
 processResources {

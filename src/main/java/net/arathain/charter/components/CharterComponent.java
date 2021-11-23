@@ -20,8 +20,8 @@ public class CharterComponent implements SendHelpComponent {
 	private UUID owner;
 	private World world;
 
-	public CharterComponent(World world) {
-		this.world = world;
+	public CharterComponent(World newWorld) {
+		world = newWorld;
 	}
 
 	public CharterComponent(BlockPos charterStone, PlayerEntity owner, World world) {
@@ -29,7 +29,10 @@ public class CharterComponent implements SendHelpComponent {
 		this.owner = owner.getUuid();
 		this.area.add(Box.of(Vec3d.of(charterStone), 15, 15, 15));
 		this.members.add(this.owner);
-		this.world = world;
+	}
+
+	public void tick() {
+
 	}
 
 	public BlockPos getCharterStonePos() {

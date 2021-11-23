@@ -8,10 +8,9 @@ import net.arathain.charter.Charter;
 import net.minecraft.util.Identifier;
 
 public class CharterComponents implements WorldComponentInitializer {
-    public static final ComponentKey<CharterComponent> CHARTER_COMPONENT_KEY =
-            ComponentRegistryV3.INSTANCE.getOrCreate(new Identifier(Charter.MODID, "charter_key"), CharterComponent.class);
-    @Override
-    public void registerWorldComponentFactories(WorldComponentFactoryRegistry registry) {
-        registry.register(CHARTER_COMPONENT_KEY, CharterComponent::new);
-    }
+    public static final ComponentKey<CharterWorldComponent> CHARTERS = ComponentRegistryV3.INSTANCE.getOrCreate(new Identifier(Charter.MODID, "charter_key"), CharterWorldComponent.class);
+   @Override
+   public void registerWorldComponentFactories(WorldComponentFactoryRegistry registry) {
+       registry.register(CHARTERS, CharterWorldComponent::new);
+   }
 }

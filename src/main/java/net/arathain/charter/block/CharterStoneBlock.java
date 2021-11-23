@@ -1,11 +1,19 @@
 package net.arathain.charter.block;
 
-import net.minecraft.block.*;
 import net.arathain.charter.block.entity.CharterStoneEntity;
+import net.arathain.charter.block.entity.PactPressBlockEntity;
+import net.arathain.charter.components.CharterComponent;
+import net.arathain.charter.components.CharterComponents;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.FluidTags;
@@ -13,11 +21,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class CharterStoneBlock extends Block implements Waterloggable, BlockEntityProvider {
-    public static final VoxelShape SHAPE = createCuboidShape(2, 0, 2, 14, 24, 14);
+        public static final VoxelShape SHAPE = createCuboidShape(2, 0, 2, 14, 24, 14);
     public CharterStoneBlock(Settings settings) {
         super(settings);
         setDefaultState(getDefaultState().with(Properties.WATERLOGGED, false));
@@ -33,6 +44,14 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
         return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        if(world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof CharterStoneEntity && placer instanceof PlayerEntity) {
+            ((CharterStoneEntity) Objects.requireNonNull(world.getBlockEntity(pos))).setCharter(new CharterComponent(pos, (PlayerEntity) placer, world));
+        }
+        super.onPlaced(world, pos, state, placer, itemStack);
     }
 
     @Override
@@ -61,6 +80,11 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
     @Override
     public FluidState getFluidState(BlockState state) {
         return state.contains(Properties.WATERLOGGED) && state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return (tickerWorld, pos, tickerState, blockEntity) -> CharterStoneEntity.tick(tickerWorld, pos, tickerState, (CharterStoneEntity) blockEntity);
     }
 
     @Nullable
