@@ -17,12 +17,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -33,9 +29,8 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
+import software.bernie.geckolib3.GeckoLib;
 
-import java.util.Optional;
-import java.util.UUID;
 import java.util.function.ToIntFunction;
 
 public class Charter implements ModInitializer {
@@ -63,12 +58,14 @@ public class Charter implements ModInitializer {
 		CHARTER_STONE_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "charter_stone"), FabricBlockEntityTypeBuilder.create(CharterStoneEntity::new, CHARTER_STONE).build(null));
 		Registry.register(Registry.STATUS_EFFECT, new Identifier(MODID, "eternal_debt"), ETERNAL_DEBT);
 		Registry.register(Registry.STATUS_EFFECT, new Identifier(MODID, "soul_strain"), SOUL_STRAIN);
+		GeckoLib.initialize();
 		LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, identifier, fabricLootSupplierBuilder, lootTableSetter) -> {
 			Identifier bastion_treasure = new Identifier(MODID, "inject/bastion_treasure");
 			if (LootTables.BASTION_TREASURE_CHEST.equals(identifier)) {
 				fabricLootSupplierBuilder.withPool(LootPool.builder().with(LootTableEntry.builder(bastion_treasure).weight(2)).build());
 			}
 		});
+		Registry.register(Registry.ITEM, new Identifier(MODID, "charter_stone"), new BlockItem(CHARTER_STONE, new FabricItemSettings().group(ItemGroup.COMBAT)));
 	}
 	private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
 		return (state) -> {

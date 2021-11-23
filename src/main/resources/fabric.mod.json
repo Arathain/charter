@@ -22,6 +22,9 @@
     "main": [
       "net.arathain.charter.Charter"
     ],
+    "client": [
+      "net.arathain.charter.CharterClient"
+    ],
     "cardinal-components-world": [
       "net.arathain.charter.components.CharterComponents"
     ]

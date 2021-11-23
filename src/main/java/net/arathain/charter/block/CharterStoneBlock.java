@@ -39,6 +39,11 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
     }
 
     @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    }
+
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
         if (state.contains(Properties.WATERLOGGED) && state.get(Properties.WATERLOGGED)) {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
