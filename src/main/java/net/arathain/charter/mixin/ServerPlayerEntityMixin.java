@@ -21,19 +21,19 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements In
     public ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
     }
-    @Inject(method = "readCustomDataFromNbt(Lnet/minecraft/nbt/NbtCompound;)V", at = @At("TAIL"))
-    public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
-        if (nbt.getUuid("charter") != null) {
-            CharterUUID = nbt.getUuid("charter");
-        }
-    }
+    //@Inject(method = "readCustomDataFromNbt(Lnet/minecraft/nbt/NbtCompound;)V", at = @At("TAIL"))
+    //public void readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
+    //    if (nbt.getUuid("charter") != null) {
+    //        CharterUUID = nbt.getUuid("charter");
+    //    }
+    //}
 
-    @Inject(method = "writeCustomDataToNbt(Lnet/minecraft/nbt/NbtCompound;)V", at = @At("TAIL"))
-    public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
-        if (CharterUUID != null) {
-            nbt.putUuid("charter", getCharterUUID());
-        }
-    }
+    //@Inject(method = "writeCustomDataToNbt(Lnet/minecraft/nbt/NbtCompound;)V", at = @At("TAIL"))
+    //public void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
+    //    if (CharterUUID != null) {
+    //        nbt.putUuid("charter", getCharterUUID());
+    //    }
+   // }
 
     @Nullable
     @Override

@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class CharterStoneBlock extends Block implements Waterloggable, BlockEntityProvider {
-        public static final VoxelShape SHAPE = createCuboidShape(2, 0, 2, 14, 24, 14);
+        public static final VoxelShape SHAPE = createCuboidShape(2, 0, 2, 14, 32, 14);
     public CharterStoneBlock(Settings settings) {
         super(settings);
         setDefaultState(getDefaultState().with(Properties.WATERLOGGED, false));
@@ -54,7 +54,7 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if(world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof CharterStoneEntity && placer instanceof PlayerEntity) {
-            ((CharterStoneEntity) Objects.requireNonNull(world.getBlockEntity(pos))).setCharter(new CharterComponent(pos, (PlayerEntity) placer, world));
+            CharterComponents.CHARTERS.get(world).getCharters().add(new CharterComponent(pos, (PlayerEntity) placer, world));
         }
         super.onPlaced(world, pos, state, placer, itemStack);
     }

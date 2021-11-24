@@ -5,10 +5,13 @@ import net.arathain.charter.block.PactPressBlock;
 import net.arathain.charter.block.SwapperBlock;
 import net.arathain.charter.block.entity.CharterStoneEntity;
 import net.arathain.charter.block.entity.PactPressBlockEntity;
+import net.arathain.charter.components.CharterComponents;
+import net.arathain.charter.components.CharterWorldComponent;
 import net.arathain.charter.item.ContractItem;
 import net.arathain.charter.item.EternalSealItem;
 import net.arathain.charter.item.MerchantCrestItem;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -25,6 +28,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
@@ -66,6 +70,14 @@ public class Charter implements ModInitializer {
 			}
 		});
 		Registry.register(Registry.ITEM, new Identifier(MODID, "charter_stone"), new BlockItem(CHARTER_STONE, new FabricItemSettings().group(ItemGroup.COMBAT)));
+		Registry.register(Registry.BLOCK, new Identifier(MODID, "charter_stone"), CHARTER_STONE);
+		ServerTickEvents.END_SERVER_TICK.register(server -> {
+			for (ServerWorld world : server.getWorlds()) {
+				CharterWorldComponent charterWorldComponent = CharterComponents.CHARTERS.get(world);
+
+				charterWorldComponent.tick();
+			}
+		});
 	}
 	private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
 		return (state) -> {

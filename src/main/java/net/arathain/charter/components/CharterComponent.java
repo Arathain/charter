@@ -2,6 +2,9 @@ package net.arathain.charter.components;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.arathain.charter.Charter;
+import net.arathain.charter.block.CharterStoneBlock;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -9,10 +12,12 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class CharterComponent implements SendHelpComponent {
@@ -27,11 +32,17 @@ public class CharterComponent implements SendHelpComponent {
 	public CharterComponent(BlockPos charterStone, PlayerEntity owner, World world) {
 		this.charterStonePos = charterStone;
 		this.owner = owner.getUuid();
+		this.world = world;
 		this.area.add(Box.of(Vec3d.of(charterStone), 15, 15, 15));
 		this.members.add(this.owner);
 	}
 
 	public void tick() {
+		BlockState upState = world.getBlockState(charterStonePos.offset(Direction.UP));
+		if (upState.getBlock() != Blocks.AIR && upState.getBlock() != Blocks.WATER) {
+			world.breakBlock(charterStonePos.offset(Direction.UP), true);
+		}
+		System.out.print("bazinga");
 
 	}
 
@@ -48,7 +59,6 @@ public class CharterComponent implements SendHelpComponent {
 		NbtList areaListTag = new NbtList();
 		NbtList memberListTag = new NbtList();
 
-		tag.put(Charter.MODID, rootTag);
 		rootTag.putUuid("CharterOwner", owner);
 		rootTag.put("CharterStonePos", NbtHelper.fromBlockPos(charterStonePos));
 
@@ -67,6 +77,7 @@ public class CharterComponent implements SendHelpComponent {
 
 		rootTag.put("CharterArea", areaListTag);
 		rootTag.put("CharterMembers", memberListTag);
+		tag.put(Charter.MODID, rootTag);
 	}
 
 	public void readFromNbt(NbtCompound tag) {

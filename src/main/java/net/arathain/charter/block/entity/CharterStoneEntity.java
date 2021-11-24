@@ -22,22 +22,11 @@ import java.util.UUID;
 
 public class CharterStoneEntity extends BlockEntity implements IAnimatable {
     private final AnimationFactory factory = new AnimationFactory(this);
-    private static CharterComponent charter;
-    public static final AnimationBuilder IDLE = new AnimationBuilder().addAnimation("idle");
+    public static final AnimationBuilder IDLE = new AnimationBuilder().addAnimation("animation.model.idle");
     public CharterStoneEntity(BlockPos pos, BlockState state) {
         super(Charter.CHARTER_STONE_ENTITY, pos, state);
     }
 
-    public CharterComponent getCharter() {
-        return charter;
-    }
-
-    public boolean isActive() {
-        return charter != null;
-    }
-    public void setCharter(CharterComponent newCharter) {
-        charter = newCharter;
-    }
 
     @Override
     public void readNbt(NbtCompound nbt) {
@@ -50,11 +39,6 @@ public class CharterStoneEntity extends BlockEntity implements IAnimatable {
     }
 
     public static void tick(World tickerWorld, BlockPos pos, BlockState tickerState, CharterStoneEntity blockEntity) {
-        CharterComponents.CHARTERS.get(tickerWorld).getCharters().forEach(charterComponent -> {
-            if (charterComponent.getCharterOwnerUuid() == charter.getCharterOwnerUuid()) {
-                charter = charterComponent;
-            }
-        });
 
     }
 

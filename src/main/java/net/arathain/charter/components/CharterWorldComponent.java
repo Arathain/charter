@@ -31,10 +31,10 @@ public class CharterWorldComponent implements AutoSyncedComponent {
         list.forEach(charterCompound -> {
             UUID charterOwner = ((NbtCompound) charterCompound).getUuid("CharterOwner");
 
-            Optional<CharterComponent> blackHole = charters.stream().filter(existingBlackHole -> existingBlackHole.getCharterOwnerUuid() == charterOwner).findFirst();
+            Optional<CharterComponent> charter = charters.stream().filter(existingCharter -> existingCharter.getCharterOwnerUuid() == charterOwner).findFirst();
 
-            if (blackHole.isPresent()) {
-                blackHole.get().readFromNbt((NbtCompound) charterCompound);
+            if (charter.isPresent()) {
+                charter.get().readFromNbt((NbtCompound) charterCompound);
             } else {
                 CharterComponent charterComponent = new CharterComponent(zaWarudo);
 
