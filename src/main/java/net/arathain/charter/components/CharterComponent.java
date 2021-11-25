@@ -3,13 +3,19 @@ package net.arathain.charter.components;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.arathain.charter.Charter;
 import net.arathain.charter.block.CharterStoneBlock;
+import net.arathain.charter.block.PactPressBlock;
+import net.arathain.charter.block.entity.PactPressBlockEntity;
+import net.arathain.charter.item.ContractItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -17,6 +23,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,7 +50,36 @@ public class CharterComponent implements SendHelpComponent {
 		if (upState.getBlock() != Blocks.AIR && upState.getBlock() != Blocks.WATER) {
 			world.breakBlock(charterStonePos.offset(Direction.UP), true);
 		}
-		System.out.print("bazinga");
+		List<BlockPos> list = new ArrayList<>();
+		for(int i=1;i<=4;i++){
+			list.add(charterStonePos.add(2, 0, 2).offset(Direction.NORTH, i-1));
+			list.add(charterStonePos.add(-2, 0, 2).offset(Direction.EAST, i-1));
+			list.add(charterStonePos.add(-2, 0, -2).offset(Direction.SOUTH, i-1));
+			list.add(charterStonePos.add(2, 0, -2).offset(Direction.WEST, i-1));
+		}
+		list.forEach(potentialVesselPos -> {
+			BlockState potentialVesselState = world.getBlockState(potentialVesselPos);
+			if (potentialVesselState.getBlock() instanceof PactPressBlock && potentialVesselState.get(Properties.LIT)) {
+				PactPressBlockEntity press = (PactPressBlockEntity) world.getBlockEntity(potentialVesselPos);
+				assert press != null;
+				if(!press.getItems().isEmpty() && ContractItem.isViable(press.getContract())) {
+					UUID newPotentialUuid = ContractItem.getIndebtedUUID(press.getContract());
+					Optional<UUID> uuid = members.stream().filter(existingUuid -> existingUuid == newPotentialUuid).findFirst();
+
+					if (uuid.isEmpty()) {
+						members.add(newPotentialUuid);
+					}
+				}
+
+			}
+		});
+		members.forEach(member -> {
+					PlayerEntity player = world.getPlayerByUuid(member);
+					if (player != null) {
+						player.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 1000));
+					}
+				}
+		);
 
 	}
 

@@ -1,0 +1,69 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 128,
+				"texture_height": 164,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "bone",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "marks2",
+					"parent": "bone",
+					"pivot": [0, 4, 0],
+					"cubes": [
+						{"origin": [-10, 5, -10], "size": [20, 3, 20], "uv": [0, 141]}
+					]
+				},
+				{
+					"name": "marks3",
+					"parent": "bone",
+					"pivot": [0, 8, 0],
+					"cubes": [
+						{"origin": [-10, 9, -10], "size": [20, 3, 20], "uv": [48, 118]}
+					]
+				},
+				{
+					"name": "marks4",
+					"parent": "bone",
+					"pivot": [0, 13, 0],
+					"cubes": [
+						{"origin": [-10, 13, -10], "size": [20, 3, 20], "uv": [0, 95]}
+					]
+				},
+				{
+					"name": "marks5",
+					"parent": "bone",
+					"pivot": [0, 17, 0],
+					"cubes": [
+						{"origin": [-10, 17, -10], "size": [20, 3, 20], "uv": [48, 72]}
+					]
+				},
+				{
+					"name": "marks6",
+					"parent": "bone",
+					"pivot": [0, 20, 0],
+					"cubes": [
+						{"origin": [-10, 21, -10], "size": [20, 3, 20], "uv": [0, 49]}
+					]
+				},
+				{
+					"name": "marks7",
+					"parent": "bone",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-10, 25, -10], "size": [20, 3, 20], "uv": [48, 26]}
+					]
+				}
+			]
+		}
+	]
+}

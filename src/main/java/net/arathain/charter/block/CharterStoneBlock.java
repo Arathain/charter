@@ -14,6 +14,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.FluidTags;
@@ -26,6 +27,7 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class CharterStoneBlock extends Block implements Waterloggable, BlockEntityProvider {
         public static final VoxelShape SHAPE = createCuboidShape(2, 0, 2, 14, 32, 14);
@@ -54,7 +56,14 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if(world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof CharterStoneEntity && placer instanceof PlayerEntity) {
-            CharterComponents.CHARTERS.get(world).getCharters().add(new CharterComponent(pos, (PlayerEntity) placer, world));
+            Optional<CharterComponent> charter = CharterComponents.CHARTERS.get(world).getCharters().stream().filter(existingCharter -> existingCharter.getCharterOwnerUuid() == placer.getUuid()).findFirst();
+
+            if (charter.isPresent()) {
+                world.breakBlock(pos, true);
+            }
+            else {
+                CharterComponents.CHARTERS.get(world).getCharters().add(new CharterComponent(pos, (PlayerEntity) placer, world));
+            }
         }
         super.onPlaced(world, pos, state, placer, itemStack);
     }

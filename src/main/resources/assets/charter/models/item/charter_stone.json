@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "charter:item/pact_press"
+    "layer0": "charter:item/charter_stone"
   }
 }

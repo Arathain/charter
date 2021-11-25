@@ -1,6 +1,7 @@
 package net.arathain.charter.components;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.arathain.charter.Charter;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.world.World;
@@ -29,7 +30,7 @@ public class CharterWorldComponent implements AutoSyncedComponent {
         NbtList list = tag.getList("charters", 10);
 
         list.forEach(charterCompound -> {
-            UUID charterOwner = ((NbtCompound) charterCompound).getUuid("CharterOwner");
+            UUID charterOwner = ((NbtCompound) charterCompound).getCompound(Charter.MODID).getUuid("CharterOwner");
 
             Optional<CharterComponent> charter = charters.stream().filter(existingCharter -> existingCharter.getCharterOwnerUuid() == charterOwner).findFirst();
 
