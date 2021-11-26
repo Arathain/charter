@@ -28,6 +28,7 @@ public class CharterStoneEntity extends BlockEntity implements IAnimatable {
     }
 
 
+
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);

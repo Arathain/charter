@@ -17,6 +17,7 @@ import java.awt.*;
 
 public class CharterStoneRenderer extends GeoBlockRenderer<CharterStoneEntity>
 {
+    AnimatedGeoModel<CharterStoneEntity> stone = new CharterStoneModel();
     public CharterStoneRenderer()
     {
         super(new CharterMarksModel());
@@ -26,7 +27,6 @@ public class CharterStoneRenderer extends GeoBlockRenderer<CharterStoneEntity>
     @Override
     public void render(CharterStoneEntity tile, float partialTicks, MatrixStack stack, VertexConsumerProvider bufferIn, int packedLightIn) {
         super.render(tile, partialTicks, stack, bufferIn, 15728880);
-        AnimatedGeoModel<CharterStoneEntity> stone = new CharterStoneModel();
 
         GeoModel model = stone.getModel(stone.getModelLocation(tile));
         stack.push();

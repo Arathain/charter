@@ -1,5 +1,6 @@
 package net.arathain.charter.block;
 
+import net.arathain.charter.Charter;
 import net.arathain.charter.block.entity.CharterStoneEntity;
 import net.arathain.charter.block.entity.PactPressBlockEntity;
 import net.arathain.charter.components.CharterComponent;
@@ -24,10 +25,13 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 public class CharterStoneBlock extends Block implements Waterloggable, BlockEntityProvider {
         public static final VoxelShape SHAPE = createCuboidShape(2, 0, 2, 14, 32, 14);
@@ -67,6 +71,7 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
         }
         super.onPlaced(world, pos, state, placer, itemStack);
     }
+
 
     @Override
     public boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
@@ -112,4 +117,15 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
         super.appendProperties(builder.add(Properties.WATERLOGGED));
     }
 
+    @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        super.onBroken(world, pos, state);
+        CharterComponents.CHARTERS.get(world).getCharters().removeIf(charter -> charter.getCharterStonePos().equals(pos));
+    }
+
+    @Override
+    public void onDestroyedByExplosion(World world, BlockPos pos, Explosion explosion) {
+        super.onDestroyedByExplosion(world, pos, explosion);
+        CharterComponents.CHARTERS.get(world).getCharters().removeIf(charter -> charter.getCharterStonePos().equals(pos));
+    }
 }

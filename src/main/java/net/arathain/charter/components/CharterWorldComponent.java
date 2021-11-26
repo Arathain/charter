@@ -2,6 +2,7 @@ package net.arathain.charter.components;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.arathain.charter.Charter;
+import net.arathain.charter.block.CharterStoneBlock;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.world.World;
@@ -20,9 +21,11 @@ public class CharterWorldComponent implements AutoSyncedComponent {
     }
 
     public void tick() {
-        charters.forEach(CharterComponent::tick);
-
         CharterComponents.CHARTERS.sync(zaWarudo);
+        for(CharterComponent charter : charters) {
+            charter.tick();
+        }
+        CharterComponents.CHARTERS.get(zaWarudo).getCharters().removeIf(charter -> !(zaWarudo.getBlockState(charter.getCharterStonePos()).getBlock() instanceof CharterStoneBlock));
     }
 
     @Override

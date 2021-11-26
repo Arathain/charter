@@ -78,7 +78,7 @@ public class SwapperBlock extends PillarBlock {
                                     press2.setStack(0, stack1);
                                     press1.markDirty();
                                     press2.markDirty();
-                                    if(player1 != null && player2 != null) {
+                                    if(player1 != null && player2 != null && player1 != player2) {
                                         boolean bool = player1.getEntityWorld() == player2.getEntityWorld();
                                         if (bool) {
                                             PlayerInventory inv1 = player1.getInventory();

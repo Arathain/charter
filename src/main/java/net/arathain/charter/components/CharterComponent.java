@@ -1,6 +1,5 @@
 package net.arathain.charter.components;
 
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.arathain.charter.Charter;
 import net.arathain.charter.block.CharterStoneBlock;
 import net.arathain.charter.block.PactPressBlock;
@@ -21,7 +20,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ import java.util.UUID;
 public class CharterComponent implements SendHelpComponent {
 	private BlockPos charterStonePos;
 	private UUID owner;
-	private World world;
+	private final World world;
 
 	public CharterComponent(World newWorld) {
 		world = newWorld;
@@ -73,14 +72,12 @@ public class CharterComponent implements SendHelpComponent {
 
 			}
 		});
-		members.forEach(member -> {
-					PlayerEntity player = world.getPlayerByUuid(member);
-					if (player != null) {
-						player.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 1000));
-					}
-				}
-		);
-
+		for(UUID member : members) {
+			PlayerEntity player = world.getPlayerByUuid(member);
+			if (player != null) {
+				player.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 1000));
+			}
+		}
 	}
 
 	public BlockPos getCharterStonePos() {
@@ -91,7 +88,7 @@ public class CharterComponent implements SendHelpComponent {
 		return owner;
 	}
 
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(@NotNull NbtCompound tag) {
 		NbtCompound rootTag = new NbtCompound();
 		NbtList areaListTag = new NbtList();
 		NbtList memberListTag = new NbtList();
@@ -104,8 +101,8 @@ public class CharterComponent implements SendHelpComponent {
 
 			boxCompound.put("Center", NbtHelper.fromBlockPos(new BlockPos(box.getCenter().x, box.getCenter().y, box.getCenter().z)));
 			boxCompound.putDouble("LengthX", box.getXLength());
-			boxCompound.putDouble("LengthY", box.getXLength());
-			boxCompound.putDouble("LengthZ", box.getXLength());
+			boxCompound.putDouble("LengthY", box.getYLength());
+			boxCompound.putDouble("LengthZ", box.getZLength());
 			areaListTag.add(boxCompound);
 		}
 
@@ -117,10 +114,18 @@ public class CharterComponent implements SendHelpComponent {
 		tag.put(Charter.MODID, rootTag);
 	}
 
+	public List<Box> getAreas() {
+		return area;
+	}
+
+	public List<UUID> getMembers() {
+		return members;
+	}
+
 	public void readFromNbt(NbtCompound tag) {
 		NbtCompound rootTag = tag.getCompound(Charter.MODID);
-		NbtList areaListTag = tag.getList("CharterArea", NbtElement.COMPOUND_TYPE);
-		NbtList memberListTag = tag.getList("CharterMembers", NbtElement.INT_ARRAY_TYPE);
+		NbtList areaListTag = rootTag.getList("CharterArea", NbtElement.COMPOUND_TYPE);
+		NbtList memberListTag = rootTag.getList("CharterMembers", NbtElement.INT_ARRAY_TYPE);
 		area.clear();
 		members.clear();
 

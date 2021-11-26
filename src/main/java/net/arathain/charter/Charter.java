@@ -10,6 +10,7 @@ import net.arathain.charter.components.CharterWorldComponent;
 import net.arathain.charter.item.ContractItem;
 import net.arathain.charter.item.EternalSealItem;
 import net.arathain.charter.item.MerchantCrestItem;
+import net.arathain.charter.util.CharterEventHandlers;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -46,7 +47,7 @@ public class Charter implements ModInitializer {
 	public static final StatusEffect SOUL_STRAIN = new CharterStatusEffect(StatusEffectType.NEUTRAL, 0x6cf5f5);
 	public static final Block PACT_PRESS = new PactPressBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(createLightLevelFromLitBlockState(10)).ticksRandomly());
 	public static final Block SWAPPER = new SwapperBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(createLightLevelFromPoweredBlockState(10)));
-	public static final Block CHARTER_STONE = new CharterStoneBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE));
+	public static final Block CHARTER_STONE = new CharterStoneBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).luminance(7));
 	public static BlockEntityType<PactPressBlockEntity> PACT_PRESS_ENTITY;
 	public static BlockEntityType<CharterStoneEntity> CHARTER_STONE_ENTITY;
 	@Override
@@ -78,6 +79,7 @@ public class Charter implements ModInitializer {
 				charterWorldComponent.tick();
 			}
 		});
+		CharterEventHandlers.init();
 	}
 	private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
 		return (state) -> {
