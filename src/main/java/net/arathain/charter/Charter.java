@@ -3,8 +3,10 @@ package net.arathain.charter;
 import net.arathain.charter.block.CharterStoneBlock;
 import net.arathain.charter.block.PactPressBlock;
 import net.arathain.charter.block.SwapperBlock;
+import net.arathain.charter.block.WaystoneBlock;
 import net.arathain.charter.block.entity.CharterStoneEntity;
 import net.arathain.charter.block.entity.PactPressBlockEntity;
+import net.arathain.charter.block.entity.WaystoneEntity;
 import net.arathain.charter.components.CharterComponents;
 import net.arathain.charter.components.CharterWorldComponent;
 import net.arathain.charter.item.ContractItem;
@@ -21,6 +23,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.item.BlockItem;
@@ -46,10 +49,12 @@ public class Charter implements ModInitializer {
 	public static final StatusEffect ETERNAL_DEBT = new CharterStatusEffect(StatusEffectType.NEUTRAL, 0x4bf1f7);
 	public static final StatusEffect SOUL_STRAIN = new CharterStatusEffect(StatusEffectType.NEUTRAL, 0x6cf5f5);
 	public static final Block PACT_PRESS = new PactPressBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(createLightLevelFromLitBlockState(10)).ticksRandomly());
+	public static final Block WAYSTONE = new WaystoneBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(3));
 	public static final Block SWAPPER = new SwapperBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(createLightLevelFromPoweredBlockState(10)));
 	public static final Block CHARTER_STONE = new CharterStoneBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).luminance(7));
 	public static BlockEntityType<PactPressBlockEntity> PACT_PRESS_ENTITY;
 	public static BlockEntityType<CharterStoneEntity> CHARTER_STONE_ENTITY;
+	public static BlockEntityType<WaystoneEntity> WAYSTONE_ENTITY;
 	@Override
 	public void onInitialize() {
 		Registry.register(Registry.ITEM, new Identifier(MODID, "contract"), CONTRACT);
@@ -57,10 +62,13 @@ public class Charter implements ModInitializer {
 		Registry.register(Registry.ITEM, new Identifier(MODID, "eternal_seal"), ETERNAL_SEAL);
 		Registry.register(Registry.ITEM, new Identifier(MODID, "pact_press"), new BlockItem(PACT_PRESS, new FabricItemSettings().group(ItemGroup.COMBAT)));
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "pact_press"), PACT_PRESS);
+		Registry.register(Registry.BLOCK, new Identifier(MODID, "waystone"), WAYSTONE);
+		Registry.register(Registry.ITEM, new Identifier(MODID, "waystone"), new BlockItem(WAYSTONE, new FabricItemSettings().group(ItemGroup.COMBAT)));
 		Registry.register(Registry.ITEM, new Identifier(MODID, "swapper"), new BlockItem(SWAPPER, new FabricItemSettings().group(ItemGroup.REDSTONE)));
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "swapper"), SWAPPER);
 		PACT_PRESS_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "pact_press"), FabricBlockEntityTypeBuilder.create(PactPressBlockEntity::new, PACT_PRESS).build(null));
 		CHARTER_STONE_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "charter_stone"), FabricBlockEntityTypeBuilder.create(CharterStoneEntity::new, CHARTER_STONE).build(null));
+		WAYSTONE_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "waystone"), FabricBlockEntityTypeBuilder.create(WaystoneEntity::new, WAYSTONE).build(null));
 		Registry.register(Registry.STATUS_EFFECT, new Identifier(MODID, "eternal_debt"), ETERNAL_DEBT);
 		Registry.register(Registry.STATUS_EFFECT, new Identifier(MODID, "soul_strain"), SOUL_STRAIN);
 		GeckoLib.initialize();
@@ -82,14 +90,10 @@ public class Charter implements ModInitializer {
 		CharterEventHandlers.init();
 	}
 	private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
-		return (state) -> {
-			return (Boolean)state.get(Properties.LIT) ? litLevel : 0;
-		};
+		return (state) -> (Boolean)state.get(Properties.LIT) ? litLevel : 0;
 	}
 	private static ToIntFunction<BlockState> createLightLevelFromPoweredBlockState(int litLevel) {
-		return (state) -> {
-			return (Boolean)state.get(Properties.POWERED) ? litLevel : 0;
-		};
+		return (state) -> (Boolean)state.get(Properties.POWERED) ? litLevel : 0;
 	}
 
 

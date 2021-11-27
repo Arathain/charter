@@ -1,0 +1,37 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 80,
+				"texture_height": 80,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "bone",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "marks4",
+					"parent": "bone",
+					"pivot": [0, 4, 0],
+					"cubes": [
+						{"origin": [-10, 4, -10], "size": [20, 3, 20], "uv": [0, 53]}
+					]
+				},
+				{
+					"name": "marks5",
+					"parent": "bone",
+					"pivot": [0, 9, 0],
+					"cubes": [
+						{"origin": [-10, 9, -10], "size": [20, 3, 20], "uv": [0, 30]}
+					]
+				}
+			]
+		}
+	]
+}

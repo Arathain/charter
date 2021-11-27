@@ -1,8 +1,8 @@
 package net.arathain.charter.block.entity.render;
 
-import net.arathain.charter.block.entity.CharterStoneEntity;
-import net.arathain.charter.block.entity.render.model.CharterMarksModel;
-import net.arathain.charter.block.entity.render.model.CharterStoneModel;
+import net.arathain.charter.block.entity.WaystoneEntity;
+import net.arathain.charter.block.entity.render.model.WaystoneMarksModel;
+import net.arathain.charter.block.entity.render.model.WaystoneModel;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -16,29 +16,17 @@ import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 import java.awt.*;
 
-public class CharterStoneRenderer extends GeoBlockRenderer<CharterStoneEntity> {
-    AnimatedGeoModel<CharterStoneEntity> stone = new CharterStoneModel();
-    public CharterStoneRenderer()
+public class WaystoneRenderer extends GeoBlockRenderer<WaystoneEntity> {
+    AnimatedGeoModel<WaystoneEntity> stone = new WaystoneModel();
+    public WaystoneRenderer()
     {
-        super(new CharterMarksModel());
+        super(new WaystoneMarksModel());
     }
 
     //this is a terrible idea. this is not how this should be done. too bad I can't be bothered to work on this @*^&#$ anymore
     @Override
-    public void render(CharterStoneEntity tile, float partialTicks, MatrixStack stack, VertexConsumerProvider bufferIn, int packedLightIn) {
-        GeoModel modelMarks = getGeoModelProvider().getModel(getGeoModelProvider().getModelLocation(tile));
-        getGeoModelProvider().setLivingAnimations(tile, this.getUniqueID(tile));
-        stack.push();
-        stack.translate(0, 0.01f, 0);
-        stack.translate(0.5, 0, 0.5);
-
-        MinecraftClient.getInstance().getTextureManager().bindTexture(getTextureLocation(tile));
-        RenderLayer marksRenderType = getRenderType(tile, partialTicks, stack, bufferIn, null, 15728880,
-                getTextureLocation(tile));
-        render(modelMarks, tile, partialTicks, marksRenderType, stack, bufferIn, null, 15728880, OverlayTexture.DEFAULT_UV,
-                1, 1,
-                1, 1);
-        stack.pop();
+    public void render(WaystoneEntity tile, float partialTicks, MatrixStack stack, VertexConsumerProvider bufferIn, int packedLightIn) {
+        super.render(tile, partialTicks, stack, bufferIn, 15728880);
 
         GeoModel model = stone.getModel(stone.getModelLocation(tile));
         stack.push();
@@ -56,7 +44,7 @@ public class CharterStoneRenderer extends GeoBlockRenderer<CharterStoneEntity> {
     }
 
     @Override
-    public RenderLayer getRenderType(CharterStoneEntity animatable, float partialTicks, MatrixStack stack, VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, Identifier textureLocation) {
+    public RenderLayer getRenderType(WaystoneEntity animatable, float partialTicks, MatrixStack stack, VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, Identifier textureLocation) {
         return RenderLayer.getEntityTranslucent(getTextureLocation(animatable));
     }
 }

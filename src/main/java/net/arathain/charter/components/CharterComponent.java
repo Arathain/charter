@@ -5,6 +5,7 @@ import net.arathain.charter.block.CharterStoneBlock;
 import net.arathain.charter.block.PactPressBlock;
 import net.arathain.charter.block.entity.PactPressBlockEntity;
 import net.arathain.charter.item.ContractItem;
+import net.arathain.charter.util.CharterUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -22,10 +23,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class CharterComponent implements SendHelpComponent {
 	private BlockPos charterStonePos;
@@ -40,7 +38,7 @@ public class CharterComponent implements SendHelpComponent {
 		this.charterStonePos = charterStone;
 		this.owner = owner.getUuid();
 		this.world = world;
-		this.area.add(Box.of(Vec3d.of(charterStone), 15, 15, 15));
+		this.area.add(Box.of(Vec3d.of(charterStone), 65, 65, 65));
 		this.members.add(this.owner);
 	}
 
@@ -72,9 +70,10 @@ public class CharterComponent implements SendHelpComponent {
 
 			}
 		});
-		for(UUID member : members) {
+		List<UUID> memberList = new ArrayList<>(members);
+		for(UUID member : memberList) {
 			PlayerEntity player = world.getPlayerByUuid(member);
-			if (player != null) {
+			if (player != null && Objects.equals(CharterUtil.getCharterAtPos(player.getPos(), player.world), this)) {
 				player.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 1000));
 			}
 		}
@@ -96,7 +95,8 @@ public class CharterComponent implements SendHelpComponent {
 		rootTag.putUuid("CharterOwner", owner);
 		rootTag.put("CharterStonePos", NbtHelper.fromBlockPos(charterStonePos));
 
-		for(Box box : area) {
+		List<Box> areas = new ArrayList<>(area);
+		for(Box box : areas) {
 			NbtCompound boxCompound = new NbtCompound();
 
 			boxCompound.put("Center", NbtHelper.fromBlockPos(new BlockPos(box.getCenter().x, box.getCenter().y, box.getCenter().z)));
@@ -106,7 +106,8 @@ public class CharterComponent implements SendHelpComponent {
 			areaListTag.add(boxCompound);
 		}
 
-		for(UUID member : members)
+		List<UUID> membrs = new ArrayList<>(members);
+		for(UUID member : membrs)
 			memberListTag.add(NbtHelper.fromUuid(member));
 
 		rootTag.put("CharterArea", areaListTag);
@@ -116,6 +117,15 @@ public class CharterComponent implements SendHelpComponent {
 
 	public List<Box> getAreas() {
 		return area;
+	}
+
+	public void addArea(Box newArea){
+		area.add(newArea);
+	}
+	public void addWaystone(BlockPos pos) {
+		Vec3d vecPos = new Vec3d(pos.getX(), pos.getY(), pos.getZ());
+		Box box = Box.of(vecPos, 33, 33, 33);
+		addArea(box);
 	}
 
 	public List<UUID> getMembers() {

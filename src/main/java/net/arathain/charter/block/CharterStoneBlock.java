@@ -25,6 +25,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,6 +46,11 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
     }
 
     @Override
+    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+        return super.canPlaceAt(state, world, pos);
+    }
+
+    @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
@@ -56,6 +62,7 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
         }
         return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
     }
+
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
@@ -99,11 +106,6 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
     @Override
     public FluidState getFluidState(BlockState state) {
         return state.contains(Properties.WATERLOGGED) && state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return (tickerWorld, pos, tickerState, blockEntity) -> CharterStoneEntity.tick(tickerWorld, pos, tickerState, (CharterStoneEntity) blockEntity);
     }
 
     @Nullable
