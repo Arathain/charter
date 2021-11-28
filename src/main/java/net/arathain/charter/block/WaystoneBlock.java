@@ -57,11 +57,9 @@ public class WaystoneBlock extends Block implements BlockEntityProvider {
             CharterComponent charter = CharterUtil.getCharterAtPos(pos, world);
 
             if(charter != null) {
-                System.out.println("bazinga");
                 charter.addWaystone(pos);
                 world.setBlockState(pos, state.with(Properties.LIT, true));
             } else {
-                System.out.println("shit");
                 world.setBlockState(pos, state.with(Properties.LIT, false));
             }
         }

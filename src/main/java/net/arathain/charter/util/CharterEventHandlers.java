@@ -7,6 +7,8 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CharterEventHandlers {
@@ -41,7 +43,8 @@ public class CharterEventHandlers {
     }
     private static ActionResult checkCharter(CharterComponent charter, PlayerEntity player) {
         if(charter != null) {
-            for(UUID uuid : charter.getMembers()) {
+            List<UUID> memberList2 = new ArrayList<>(charter.getMembers());
+            for(UUID uuid : memberList2) {
                 if(uuid.equals(player.getUuid())) {
                     return ActionResult.PASS;
                 }

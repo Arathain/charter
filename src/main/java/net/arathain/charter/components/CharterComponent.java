@@ -29,6 +29,7 @@ public class CharterComponent implements SendHelpComponent {
 	private BlockPos charterStonePos;
 	private UUID owner;
 	private final World world;
+	private Map<UUID, BlockPos> pactVessels = new HashMap<>();
 
 	public CharterComponent(World newWorld) {
 		world = newWorld;
@@ -48,6 +49,7 @@ public class CharterComponent implements SendHelpComponent {
 			world.breakBlock(charterStonePos.offset(Direction.UP), true);
 		}
 		List<BlockPos> list = new ArrayList<>();
+
 		for(int i=1;i<=4;i++){
 			list.add(charterStonePos.add(2, 0, 2).offset(Direction.NORTH, i-1));
 			list.add(charterStonePos.add(-2, 0, 2).offset(Direction.EAST, i-1));
@@ -62,21 +64,52 @@ public class CharterComponent implements SendHelpComponent {
 				if(!press.getItems().isEmpty() && ContractItem.isViable(press.getContract())) {
 					UUID newPotentialUuid = ContractItem.getIndebtedUUID(press.getContract());
 					Optional<UUID> uuid = members.stream().filter(existingUuid -> existingUuid == newPotentialUuid).findFirst();
-
 					if (uuid.isEmpty()) {
 						members.add(newPotentialUuid);
+						pactVessels.put(newPotentialUuid, potentialVesselPos);
 					}
+
+
 				}
 
 			}
 		});
+		List<UUID> memberList3 = new ArrayList<>(members);
+		for(UUID member : memberList3) {
+			PlayerEntity player = world.getPlayerByUuid(member);
+			if (player != null && Objects.equals(CharterUtil.getCharterAtPos(player.getPos(), player.world), this)) {
+				player.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 1000));
+			}
+		}
 		List<UUID> memberList = new ArrayList<>(members);
 		for(UUID member : memberList) {
+			if (!(member.equals(owner))) {
+				Map<UUID, BlockPos> vessels = new HashMap<>(pactVessels);
+				if (vessels.get(member) == null || !(world.getBlockState(vessels.get(member)).getBlock() instanceof PactPressBlock) || !(world.getBlockState(vessels.get(member)).get(Properties.LIT))) {
+					members.remove(member);
+					pactVessels.remove(member);
+					System.out.println("removed UUID for invalid");
+				} else {
+					PactPressBlockEntity press = (PactPressBlockEntity) world.getBlockEntity(vessels.get(member));
+					if (press == null || press.getItems().isEmpty() || !(ContractItem.isViable(press.getContract())) || !Objects.equals(ContractItem.getIndebtedUUID(press.getContract()), member)) {
+						members.remove(member);
+						pactVessels.remove(member);
+						System.out.println("removed UUID for not being there");
+					}
+
+				}
+			}
+		}
+
+		List<UUID> memberList2 = new ArrayList<>(members);
+		for(UUID member : memberList2) {
 			PlayerEntity player = world.getPlayerByUuid(member);
 			if (player != null && Objects.equals(CharterUtil.getCharterAtPos(player.getPos(), player.world), this)) {
 				player.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 1000));
 			}
 		}
+
+
 	}
 
 	public BlockPos getCharterStonePos() {
@@ -91,6 +124,8 @@ public class CharterComponent implements SendHelpComponent {
 		NbtCompound rootTag = new NbtCompound();
 		NbtList areaListTag = new NbtList();
 		NbtList memberListTag = new NbtList();
+		NbtList pactVesselListTag = new NbtList();
+
 
 		rootTag.putUuid("CharterOwner", owner);
 		rootTag.put("CharterStonePos", NbtHelper.fromBlockPos(charterStonePos));
@@ -105,12 +140,21 @@ public class CharterComponent implements SendHelpComponent {
 			boxCompound.putDouble("LengthZ", box.getZLength());
 			areaListTag.add(boxCompound);
 		}
+		Map<UUID, BlockPos> vessels = new HashMap<>(pactVessels);
 
 		List<UUID> membrs = new ArrayList<>(members);
-		for(UUID member : membrs)
+		for(UUID member : membrs) {
+			if (!member.equals(owner)) {
+				NbtCompound pactVessel = new NbtCompound();
+				pactVessel.put("Pos", NbtHelper.fromBlockPos(vessels.get(member)));
+				pactVessel.putUuid("Uuid", member);
+				pactVesselListTag.add(pactVessel);
+			}
 			memberListTag.add(NbtHelper.fromUuid(member));
+		}
 
 		rootTag.put("CharterArea", areaListTag);
+		rootTag.put("CharterVessels", pactVesselListTag);
 		rootTag.put("CharterMembers", memberListTag);
 		tag.put(Charter.MODID, rootTag);
 	}
@@ -136,8 +180,10 @@ public class CharterComponent implements SendHelpComponent {
 		NbtCompound rootTag = tag.getCompound(Charter.MODID);
 		NbtList areaListTag = rootTag.getList("CharterArea", NbtElement.COMPOUND_TYPE);
 		NbtList memberListTag = rootTag.getList("CharterMembers", NbtElement.INT_ARRAY_TYPE);
+		NbtList charterVesselListTag = rootTag.getList("CharterVessels", NbtElement.COMPOUND_TYPE);
 		area.clear();
 		members.clear();
+		pactVessels.clear();
 
 		owner = rootTag.getUuid("CharterOwner");
 		charterStonePos = NbtHelper.toBlockPos(rootTag.getCompound("CharterStonePos"));
@@ -146,9 +192,25 @@ public class CharterComponent implements SendHelpComponent {
 			NbtCompound boxCompound = (NbtCompound) boxElement;
 			area.add(Box.of(Vec3d.of(NbtHelper.toBlockPos(boxCompound.getCompound("Center"))), boxCompound.getDouble("LengthX"), boxCompound.getDouble("LengthY"), boxCompound.getDouble("LengthZ")));
 		}
+		for(NbtElement vesselElement : charterVesselListTag) {
+			NbtCompound vessel = (NbtCompound) vesselElement;
+			pactVessels.put(vessel.getUuid("Uuid"), NbtHelper.toBlockPos(vessel.getCompound("Pos")));
+		}
 
+
+		Map<UUID, BlockPos> vessels = new HashMap<>(pactVessels);
 		for(NbtElement member : memberListTag) {
-			members.add(NbtHelper.toUuid(member));
+			UUID memberUUID = NbtHelper.toUuid(member);
+			if (memberUUID.equals(owner)) {
+				members.add(NbtHelper.toUuid(member));
+			} else {
+				if (world.getBlockState(vessels.get(memberUUID)).getBlock() instanceof PactPressBlock && world.getBlockState(vessels.get(memberUUID)).get(Properties.LIT)) {
+					PactPressBlockEntity press = (PactPressBlockEntity) world.getBlockEntity(vessels.get(memberUUID));
+					if (press != null && !press.getItems().isEmpty() && ContractItem.isViable(press.getContract()) && Objects.equals(ContractItem.getIndebtedUUID(press.getContract()), memberUUID)) {
+						members.add(NbtHelper.toUuid(member));
+					}
+				}
+			}
 		}
 	}
 }
