@@ -1,6 +1,8 @@
 package net.arathain.charter.mixin;
 
 import net.arathain.charter.Charter;
+import net.arathain.charter.components.CharterComponent;
+import net.arathain.charter.components.CharterComponents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -21,8 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
@@ -46,8 +47,26 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         }
     }
 
+    @Inject(method= "onDeath", at = @At("HEAD"))
+    private void death(DamageSource source, CallbackInfo ci) {}
+
+
+
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     private void dmg(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (source.getAttacker() instanceof PlayerEntity attacker) {
+            List<CharterComponent> charters = new ArrayList<>(CharterComponents.CHARTERS.get(this.world).getCharters());
+            charters.forEach(charterComponent -> {
+                if(charterComponent.getCharterOwnerUuid().equals(this.getUuid())) {
+                    List<UUID> members = new ArrayList<>(charterComponent.getMembers());
+                    members.forEach(member -> {
+                        if(member.equals(attacker.getUuid())) {
+                            cir.setReturnValue(false);
+                        }
+                    });
+                }
+            });
+        }
         if (this.hasStatusEffect(Charter.SOUL_STRAIN) && !this.world.isClient) {
             source.setUsesMagic();
             amount = amount * 2;
@@ -76,6 +95,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 }
             }
         }
+
     }
 
     @Override
