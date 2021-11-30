@@ -35,8 +35,8 @@ public class CharterStoneEntity extends BlockEntity implements IAnimatable {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        return super.writeNbt(nbt);
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
     }
 
     @Override

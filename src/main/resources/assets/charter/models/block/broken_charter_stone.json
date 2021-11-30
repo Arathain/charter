@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [56, 46],
+	"textures": {
+		"0": "charter:block/broken_charter_stone",
+		"particle": "charter:block/broken_charter_stone"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 1],
+			"to": [15, 32, 15],
+			"faces": {
+				"north": {"uv": [4, 4.86957, 8, 16], "texture": "#0"},
+				"east": {"uv": [0, 4.86957, 4, 16], "texture": "#0"},
+				"south": {"uv": [12, 4.86957, 16, 16], "texture": "#0"},
+				"west": {"uv": [8, 4.86957, 12, 16], "texture": "#0"},
+				"up": {"uv": [8, 4.86957, 4, 0], "texture": "#0"},
+				"down": {"uv": [12, 0, 8, 4.86957], "texture": "#0"}
+			}
+		}
+	]
+}

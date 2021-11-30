@@ -1,7 +1,5 @@
 package net.arathain.charter.block;
 
-import net.arathain.charter.Charter;
-import net.arathain.charter.block.entity.CharterStoneEntity;
 import net.arathain.charter.block.entity.WaystoneEntity;
 import net.arathain.charter.components.CharterComponent;
 import net.arathain.charter.components.CharterComponents;
@@ -19,15 +17,11 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.biome.BiomeKeys;
-import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.gen.feature.OceanRuinFeature;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class WaystoneBlock extends Block implements BlockEntityProvider {
     public static final VoxelShape SHAPE = createCuboidShape(2, 0, 2, 14, 16, 14);

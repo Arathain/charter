@@ -2,21 +2,17 @@ package net.arathain.charter.block;
 
 import com.mojang.authlib.GameProfile;
 import io.github.ladysnake.impersonate.Impersonator;
-import io.github.ladysnake.impersonate.impl.ImpersonateCommand;
 import net.arathain.charter.Charter;
-import net.arathain.charter.CharterStatusEffect;
 import net.arathain.charter.block.entity.PactPressBlockEntity;
 import net.arathain.charter.item.ContractItem;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.PillarBlock;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.command.GameModeCommand;
-import net.minecraft.server.command.TeleportCommand;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -25,8 +21,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldEvents;
-import net.minecraft.world.event.GameEvent;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -49,8 +43,8 @@ public class SwapperBlock extends PillarBlock {
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         if (!world.isClient) {
             boolean bl = world.isReceivingRedstonePower(pos);
-            if ((Boolean)state.get(POWERED) != bl) {
-                world.setBlockState(pos, (BlockState)((BlockState)state.with(POWERED, bl)), Block.NOTIFY_LISTENERS);
+            if (state.get(POWERED) != bl) {
+                world.setBlockState(pos, (BlockState)state.with(POWERED, bl), Block.NOTIFY_LISTENERS);
                 if (bl) {
                     BlockPos pos1 = pos.offset(state.get(Properties.AXIS), 1);
                     BlockPos pos2 = pos.offset(state.get(Properties.AXIS), -1);

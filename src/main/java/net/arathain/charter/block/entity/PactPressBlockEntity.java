@@ -2,13 +2,11 @@ package net.arathain.charter.block.entity;
 
 import net.arathain.charter.Charter;
 import net.arathain.charter.item.ContractItem;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
@@ -19,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public class PactPressBlockEntity extends BlockEntity implements BlockEntityClientSerializable, AelpecyemIsCool {
+public class PactPressBlockEntity extends BlockEntity implements AelpecyemIsCool {
     private final DefaultedList<ItemStack> ITEMS = DefaultedList.ofSize(1, ItemStack.EMPTY);
     public PactPressBlockEntity(BlockPos pos, BlockState state) {
         super(Charter.PACT_PRESS_ENTITY, pos, state);
@@ -44,15 +42,13 @@ public class PactPressBlockEntity extends BlockEntity implements BlockEntityClie
 
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        return super.writeNbt(toClientTag(tag));
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(toClientTag(tag));
     }
-    @Override
     public void fromClientTag(NbtCompound tag) {
         ITEMS.clear();
         Inventories.readNbt(tag, ITEMS);
     }
-    @Override
     public NbtCompound toClientTag(NbtCompound tag) {
         Inventories.writeNbt(tag, ITEMS);
         return tag;
@@ -65,13 +61,6 @@ public class PactPressBlockEntity extends BlockEntity implements BlockEntityClie
         super.readNbt(nbt);
     }
 
-    @Override
-    public void markDirty() {
-        if (world != null && !world.isClient) {
-            sync();
-        }
-        super.markDirty();
-    }
 
     @Override
     public int getMaxCountPerStack() {

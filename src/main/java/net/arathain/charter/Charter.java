@@ -23,9 +23,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -46,12 +45,13 @@ public class Charter implements ModInitializer {
 	public static final Item CONTRACT = new ContractItem( new Item.Settings().maxCount(1).rarity(Rarity.RARE).group(ItemGroup.COMBAT));
 	public static final Item MERCHANT_CREST = new MerchantCrestItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC).group(ItemGroup.COMBAT));
 	public static final Item ETERNAL_SEAL = new EternalSealItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC).group(ItemGroup.COMBAT));
-	public static final StatusEffect ETERNAL_DEBT = new CharterStatusEffect(StatusEffectType.NEUTRAL, 0x4bf1f7);
-	public static final StatusEffect SOUL_STRAIN = new CharterStatusEffect(StatusEffectType.NEUTRAL, 0x6cf5f5);
+	public static final StatusEffect ETERNAL_DEBT = new CharterStatusEffect(StatusEffectCategory.NEUTRAL, 0x4bf1f7);
+	public static final StatusEffect SOUL_STRAIN = new CharterStatusEffect(StatusEffectCategory.NEUTRAL, 0x6cf5f5);
 	public static final Block PACT_PRESS = new PactPressBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(createLightLevelFromLitBlockState(10)).ticksRandomly());
 	public static final Block WAYSTONE = new WaystoneBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(3));
 	public static final Block SWAPPER = new SwapperBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(createLightLevelFromPoweredBlockState(10)));
 	public static final Block CHARTER_STONE = new CharterStoneBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).luminance(7));
+	public static final Block BROKEN_CHARTER_STONE = new CharterStoneBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).luminance(0));
 	public static BlockEntityType<PactPressBlockEntity> PACT_PRESS_ENTITY;
 	public static BlockEntityType<CharterStoneEntity> CHARTER_STONE_ENTITY;
 	public static BlockEntityType<WaystoneEntity> WAYSTONE_ENTITY;
@@ -80,6 +80,7 @@ public class Charter implements ModInitializer {
 		});
 		Registry.register(Registry.ITEM, new Identifier(MODID, "charter_stone"), new BlockItem(CHARTER_STONE, new FabricItemSettings().group(ItemGroup.COMBAT)));
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "charter_stone"), CHARTER_STONE);
+		Registry.register(Registry.BLOCK, new Identifier(MODID, "broken_charter_stone"), BROKEN_CHARTER_STONE);
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			for (ServerWorld world : server.getWorlds()) {
 				CharterWorldComponent charterWorldComponent = CharterComponents.CHARTERS.get(world);

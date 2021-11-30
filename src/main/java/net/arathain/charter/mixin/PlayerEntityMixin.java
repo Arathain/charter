@@ -1,8 +1,12 @@
 package net.arathain.charter.mixin;
 
 import net.arathain.charter.Charter;
+import net.arathain.charter.block.CharterStoneBlock;
+import net.arathain.charter.block.WaystoneBlock;
 import net.arathain.charter.components.CharterComponent;
 import net.arathain.charter.components.CharterComponents;
+import net.arathain.charter.util.CharterUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -11,6 +15,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeKeys;
@@ -48,7 +53,42 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
 
     @Inject(method= "onDeath", at = @At("HEAD"))
-    private void death(DamageSource source, CallbackInfo ci) {}
+    private void death(DamageSource source, CallbackInfo ci) {
+        CharterComponent charter = CharterUtil.getCharterAtPos(this.getPos(), this.world);
+        System.out.println("runs");
+        if(charter != null) {
+            if (this.getUuid().equals(charter.getCharterOwnerUuid())) {
+                System.out.println("check 1 passed");
+                charter.getAreas().forEach(area -> {
+                    if (area.contains(this.getPos())) {
+                        BlockState state = world.getBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z));
+                        if(state.getBlock() instanceof WaystoneBlock) {
+                            world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
+                            System.out.println("waystone passed");
+                        }
+                        if(state.getBlock() instanceof CharterStoneBlock) {
+                            charter.killCharter();
+                            System.out.println("kill passed");
+                        }
+                    }
+                });
+            } else {
+                charter.getMembers().forEach(member -> {
+                    if(member.equals(uuid)) {
+                        charter.getAreas().forEach(area -> {
+                            if (area.contains(this.getPos())) {
+                                BlockState state = world.getBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z));
+                                if(state.getBlock() instanceof WaystoneBlock) {
+                                    world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
+                                }
+                            }
+                        });
+                    }
+                });
+
+            }
+        }
+    }
 
 
 

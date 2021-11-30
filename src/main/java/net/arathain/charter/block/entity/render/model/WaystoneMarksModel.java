@@ -1,6 +1,7 @@
 package net.arathain.charter.block.entity.render.model;
 
 import net.arathain.charter.Charter;
+import net.arathain.charter.block.WaystoneBlock;
 import net.arathain.charter.block.entity.WaystoneEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -34,7 +35,8 @@ public Identifier getAnimationFileLocation(WaystoneEntity animatable) {
         public void setLivingAnimations(WaystoneEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
                 IBone marks4 = this.getAnimationProcessor().getBone("marks4");
                 IBone marks5 = this.getAnimationProcessor().getBone("marks5");
-                if(Objects.requireNonNull(entity.getWorld()).getBlockState(entity.getPos()).get(Properties.LIT)) {
+
+                if(entity.getWorld() != null && entity.getWorld().getBlockState(entity.getPos()) != null && entity.getWorld().getBlockState(entity.getPos()).getBlock() instanceof WaystoneBlock && entity.getWorld().getBlockState(entity.getPos()).get(Properties.LIT)) {
                         super.setLivingAnimations(entity, uniqueID, customPredicate);
                         marks4.setHidden(false);
                         marks5.setHidden(false);

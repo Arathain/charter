@@ -2,10 +2,10 @@ package net.arathain.charter;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
 
 public class CharterStatusEffect extends StatusEffect {
-    protected CharterStatusEffect(StatusEffectType type, int color) {
+    protected CharterStatusEffect(StatusEffectCategory type, int color) {
         super(type, color);
     }
 

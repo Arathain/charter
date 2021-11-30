@@ -5,6 +5,7 @@ import net.arathain.charter.block.entity.CharterStoneEntity;
 import net.arathain.charter.block.entity.PactPressBlockEntity;
 import net.arathain.charter.components.CharterComponent;
 import net.arathain.charter.components.CharterComponents;
+import net.arathain.charter.util.CharterUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -47,7 +48,11 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return super.canPlaceAt(state, world, pos);
+        if(CharterUtil.getCharterAtPos(pos, (World) world) != null) {
+            return false;
+        } else {
+            return super.canPlaceAt(state, world, pos);
+        }
     }
 
     @Override
@@ -58,7 +63,7 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
         if (state.contains(Properties.WATERLOGGED) && state.get(Properties.WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
         return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
     }
@@ -85,7 +90,7 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
         if (!state.get(Properties.WATERLOGGED) && fluidState.getFluid() == Fluids.WATER) {
             if (!world.isClient()) {
                 world.setBlockState(pos, state.with(Properties.WATERLOGGED, true), 3);
-                world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
+                world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
             }
             return true;
         }

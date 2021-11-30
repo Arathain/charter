@@ -3,6 +3,7 @@ package net.arathain.charter.components;
 import net.arathain.charter.Charter;
 import net.arathain.charter.block.CharterStoneBlock;
 import net.arathain.charter.block.PactPressBlock;
+import net.arathain.charter.block.WaystoneBlock;
 import net.arathain.charter.block.entity.PactPressBlockEntity;
 import net.arathain.charter.item.ContractItem;
 import net.arathain.charter.util.CharterUtil;
@@ -41,6 +42,26 @@ public class CharterComponent implements SendHelpComponent {
 		this.world = world;
 		this.area.add(Box.of(Vec3d.of(charterStone), 65, 65, 65));
 		this.members.add(this.owner);
+	}
+	public void killCharter() {
+		this.getAreas().forEach(area -> {
+			BlockState state = world.getBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z));
+			if(state.getBlock() instanceof WaystoneBlock) {
+				world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
+			}
+			if(state.getBlock() instanceof CharterStoneBlock) {
+				world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
+				world.setBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), Charter.BROKEN_CHARTER_STONE.getDefaultState());
+			}
+				});
+		this.getMembers().forEach(member -> {
+			PlayerEntity player = world.getPlayerByUuid(member);
+			if(player != null) {
+				player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 5));
+			}
+		});
+		System.out.println("final check passed");
+		CharterComponents.CHARTERS.get(world).getCharters().removeIf(charter -> charter.equals(this));
 	}
 
 	public void tick() {
