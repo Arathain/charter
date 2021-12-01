@@ -1,6 +1,7 @@
 package net.arathain.charter;
 
 import net.arathain.charter.block.*;
+import net.arathain.charter.block.entity.CharterSentinelEntity;
 import net.arathain.charter.block.entity.CharterStoneEntity;
 import net.arathain.charter.block.entity.PactPressBlockEntity;
 import net.arathain.charter.block.entity.WaystoneEntity;
@@ -16,10 +17,17 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.item.BlockItem;
@@ -50,6 +58,8 @@ public class Charter implements ModInitializer {
 	public static final Block SWAPPER = new SwapperBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(createLightLevelFromPoweredBlockState(10)));
 	public static final Block CHARTER_STONE = new CharterStoneBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).luminance(7).nonOpaque());
 	public static final Block BROKEN_CHARTER_STONE = new BrokenCharterStoneBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).luminance(0).ticksRandomly());
+	public static final EntityType<CharterSentinelEntity> SENTINEL = createEntity("charter_sentinel", CharterSentinelEntity.createAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, CharterSentinelEntity::new).dimensions(EntityDimensions.fixed(0f, 0f)).fireImmune().build());
+
 	public static BlockEntityType<PactPressBlockEntity> PACT_PRESS_ENTITY;
 	public static BlockEntityType<CharterStoneEntity> CHARTER_STONE_ENTITY;
 	public static BlockEntityType<WaystoneEntity> WAYSTONE_ENTITY;
@@ -88,12 +98,18 @@ public class Charter implements ModInitializer {
 			}
 		});
 		CharterEventHandlers.init();
+		Registry.register(Registry.ENTITY_TYPE, new Identifier(Charter.MODID, "charter_sentinel"), SENTINEL);
 	}
 	private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
 		return (state) -> (Boolean)state.get(Properties.LIT) ? litLevel : 0;
 	}
 	private static ToIntFunction<BlockState> createLightLevelFromPoweredBlockState(int litLevel) {
 		return (state) -> (Boolean)state.get(Properties.POWERED) ? litLevel : 0;
+	}
+	private static <T extends LivingEntity> EntityType<T> createEntity(String name, DefaultAttributeContainer.Builder attributes, EntityType<T> type) {
+		FabricDefaultAttributeRegistry.register(type, attributes);
+
+		return type;
 	}
 
 
