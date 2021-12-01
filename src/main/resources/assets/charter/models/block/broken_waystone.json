@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [56, 30],
+	"textures": {
+		"1": "charter:block/broken_waystone",
+		"particle": "charter:block/broken_waystone"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 1],
+			"to": [15, 16, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [4, 7.46667, 8, 16], "texture": "#1"},
+				"east": {"uv": [0, 7.46667, 4, 16], "texture": "#1"},
+				"south": {"uv": [12, 7.46667, 16, 16], "texture": "#1"},
+				"west": {"uv": [8, 7.46667, 12, 16], "texture": "#1"},
+				"up": {"uv": [8, 7.46667, 4, 0], "texture": "#1"},
+				"down": {"uv": [12, 0, 8, 7.46667], "texture": "#1"}
+			}
+		}
+	]
+}

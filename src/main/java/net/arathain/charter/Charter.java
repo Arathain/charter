@@ -1,9 +1,6 @@
 package net.arathain.charter;
 
-import net.arathain.charter.block.CharterStoneBlock;
-import net.arathain.charter.block.PactPressBlock;
-import net.arathain.charter.block.SwapperBlock;
-import net.arathain.charter.block.WaystoneBlock;
+import net.arathain.charter.block.*;
 import net.arathain.charter.block.entity.CharterStoneEntity;
 import net.arathain.charter.block.entity.PactPressBlockEntity;
 import net.arathain.charter.block.entity.WaystoneEntity;
@@ -48,10 +45,11 @@ public class Charter implements ModInitializer {
 	public static final StatusEffect ETERNAL_DEBT = new CharterStatusEffect(StatusEffectCategory.NEUTRAL, 0x4bf1f7);
 	public static final StatusEffect SOUL_STRAIN = new CharterStatusEffect(StatusEffectCategory.NEUTRAL, 0x6cf5f5);
 	public static final Block PACT_PRESS = new PactPressBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(createLightLevelFromLitBlockState(10)).ticksRandomly());
-	public static final Block WAYSTONE = new WaystoneBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(3));
+	public static final Block WAYSTONE = new WaystoneBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(3).nonOpaque());
+	public static final Block BROKEN_WAYSTONE = new BrokenWaystoneBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).luminance(0));
 	public static final Block SWAPPER = new SwapperBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(createLightLevelFromPoweredBlockState(10)));
-	public static final Block CHARTER_STONE = new CharterStoneBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).luminance(7));
-	public static final Block BROKEN_CHARTER_STONE = new CharterStoneBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).luminance(0));
+	public static final Block CHARTER_STONE = new CharterStoneBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).luminance(7).nonOpaque());
+	public static final Block BROKEN_CHARTER_STONE = new BrokenCharterStoneBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).luminance(0).ticksRandomly());
 	public static BlockEntityType<PactPressBlockEntity> PACT_PRESS_ENTITY;
 	public static BlockEntityType<CharterStoneEntity> CHARTER_STONE_ENTITY;
 	public static BlockEntityType<WaystoneEntity> WAYSTONE_ENTITY;
@@ -81,6 +79,7 @@ public class Charter implements ModInitializer {
 		Registry.register(Registry.ITEM, new Identifier(MODID, "charter_stone"), new BlockItem(CHARTER_STONE, new FabricItemSettings().group(ItemGroup.COMBAT)));
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "charter_stone"), CHARTER_STONE);
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "broken_charter_stone"), BROKEN_CHARTER_STONE);
+		Registry.register(Registry.BLOCK, new Identifier(MODID, "broken_waystone"), BROKEN_WAYSTONE);
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			for (ServerWorld world : server.getWorlds()) {
 				CharterWorldComponent charterWorldComponent = CharterComponents.CHARTERS.get(world);

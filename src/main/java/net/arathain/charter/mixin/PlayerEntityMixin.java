@@ -16,6 +16,7 @@ import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeKeys;
@@ -55,31 +56,33 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Inject(method= "onDeath", at = @At("HEAD"))
     private void death(DamageSource source, CallbackInfo ci) {
         CharterComponent charter = CharterUtil.getCharterAtPos(this.getPos(), this.world);
-        System.out.println("runs");
         if(charter != null) {
             if (this.getUuid().equals(charter.getCharterOwnerUuid())) {
-                System.out.println("check 1 passed");
-                charter.getAreas().forEach(area -> {
+                List<Box> boxes = new ArrayList<>(charter.getAreas());
+                boxes.forEach(area -> {
                     if (area.contains(this.getPos())) {
                         BlockState state = world.getBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z));
                         if(state.getBlock() instanceof WaystoneBlock) {
                             world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
-                            System.out.println("waystone passed");
+                            world.setBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), Charter.BROKEN_WAYSTONE.getDefaultState());
+                            charter.getAreas().remove(area);
                         }
                         if(state.getBlock() instanceof CharterStoneBlock) {
                             charter.killCharter();
-                            System.out.println("kill passed");
                         }
                     }
                 });
             } else {
                 charter.getMembers().forEach(member -> {
                     if(member.equals(uuid)) {
-                        charter.getAreas().forEach(area -> {
+                        List<Box> boxes = new ArrayList<>(charter.getAreas());
+                        boxes.forEach(area -> {
                             if (area.contains(this.getPos())) {
                                 BlockState state = world.getBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z));
                                 if(state.getBlock() instanceof WaystoneBlock) {
                                     world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
+                                    world.setBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), Charter.BROKEN_WAYSTONE.getDefaultState());
+                                    charter.getAreas().remove(area);
                                 }
                             }
                         });

@@ -48,6 +48,7 @@ public class CharterComponent implements SendHelpComponent {
 			BlockState state = world.getBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z));
 			if(state.getBlock() instanceof WaystoneBlock) {
 				world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
+				world.setBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), Charter.BROKEN_WAYSTONE.getDefaultState());
 			}
 			if(state.getBlock() instanceof CharterStoneBlock) {
 				world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
@@ -165,7 +166,7 @@ public class CharterComponent implements SendHelpComponent {
 
 		List<UUID> membrs = new ArrayList<>(members);
 		for(UUID member : membrs) {
-			if (!member.equals(owner)) {
+			if (!member.equals(owner) && vessels.get(member) != null) {
 				NbtCompound pactVessel = new NbtCompound();
 				pactVessel.put("Pos", NbtHelper.fromBlockPos(vessels.get(member)));
 				pactVessel.putUuid("Uuid", member);
