@@ -21,11 +21,11 @@ public class CharterWorldComponent implements AutoSyncedComponent {
     }
 
     public void tick() {
-        CharterComponents.CHARTERS.sync(zaWarudo);
         for(CharterComponent charter : charters) {
             charter.tick();
         }
         CharterComponents.CHARTERS.get(zaWarudo).getCharters().removeIf(charter -> !(zaWarudo.getBlockState(charter.getCharterStonePos()).getBlock() instanceof CharterStoneBlock));
+        CharterComponents.CHARTERS.sync(zaWarudo);
     }
 
     @Override

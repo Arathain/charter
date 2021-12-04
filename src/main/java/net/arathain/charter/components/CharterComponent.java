@@ -226,12 +226,8 @@ public class CharterComponent implements SendHelpComponent {
 			if (memberUUID.equals(owner)) {
 				members.add(NbtHelper.toUuid(member));
 			} else {
-				if (world.getBlockState(vessels.get(memberUUID)).getBlock() instanceof PactPressBlock && world.getBlockState(vessels.get(memberUUID)).get(Properties.LIT)) {
-					PactPressBlockEntity press = (PactPressBlockEntity) world.getBlockEntity(vessels.get(memberUUID));
-					if (press != null && !press.getItems().isEmpty() && ContractItem.isViable(press.getContract()) && Objects.equals(ContractItem.getIndebtedUUID(press.getContract()), memberUUID)) {
-						members.add(NbtHelper.toUuid(member));
-					}
-				}
+				members.add(NbtHelper.toUuid(member));
+
 			}
 		}
 	}
