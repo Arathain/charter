@@ -2,6 +2,8 @@ package net.arathain.charter.block;
 
 import net.arathain.charter.block.entity.AelpecyemIsCool;
 import net.arathain.charter.block.entity.PactPressBlockEntity;
+import net.arathain.charter.components.CharterComponent;
+import net.arathain.charter.components.CharterComponents;
 import net.arathain.charter.item.ContractItem;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -22,13 +24,17 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class PactPressBlock extends Block implements BlockEntityProvider, Waterloggable {
@@ -56,6 +62,9 @@ public class PactPressBlock extends Block implements BlockEntityProvider, Waterl
             PactPressBlockEntity press = (PactPressBlockEntity) world.getBlockEntity(pos);
             assert press != null;
             if(press.getContract() == ItemStack.EMPTY && ContractItem.isViable(stack)) {
+                if(getCharterStoneComponent(pos, world) != null) {
+                    Objects.requireNonNull(getCharterStoneComponent(pos, world)).getMembers().add(ContractItem.getIndebtedUUID(stack));
+                }
                 world.setBlockState(pos, state.with(Properties.LIT, true));
                 world.playSound(null, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1, 1);
                 press.setStack(0, stack);
@@ -64,6 +73,9 @@ public class PactPressBlock extends Block implements BlockEntityProvider, Waterl
             } else if (!press.getItems().isEmpty() && stack.isEmpty() && ContractItem.isViable(press.getContract())) {
                 assert press.getContract() != null;
                 world.spawnEntity(new ItemEntity(world, player.getX(), player.getY() + 0.5, player.getZ(), press.getContract()));
+                if(getCharterStoneComponent(pos, world) != null) {
+                    Objects.requireNonNull(getCharterStoneComponent(pos, world)).getMembers().remove(ContractItem.getIndebtedUUID(press.getContract()));
+                }
                 ((AelpecyemIsCool) press).clear();
                 press.removeStack(0);
                 world.setBlockState(pos, state.with(Properties.LIT, false));
@@ -117,17 +129,36 @@ public class PactPressBlock extends Block implements BlockEntityProvider, Waterl
     }
 
     @Override
-    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-        PactPressBlockEntity press = (PactPressBlockEntity) world.getBlockEntity(pos);
+    public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack stack) {
+        PactPressBlockEntity press = (PactPressBlockEntity) blockEntity;
         if(press != null && press.getContract().getItem() instanceof ContractItem && world.getPlayerByUuid(ContractItem.getIndebtedUUID(press.getContract())) != null) {
             Objects.requireNonNull(world.getPlayerByUuid(ContractItem.getIndebtedUUID(press.getContract()))).kill();
+            if(getCharterStoneComponent(pos, world) != null) {
+                Objects.requireNonNull(getCharterStoneComponent(pos, world)).getMembers().remove(ContractItem.getIndebtedUUID(press.getContract()));
+            }
         }
-        super.onBroken(world, pos, state);
+
+        super.afterBreak(world, player, pos, state, blockEntity, stack);
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder.add(Properties.LIT, Properties.FACING, Properties.WATERLOGGED));
+    }
+
+    @Nullable
+    public static CharterComponent getCharterStoneComponent(BlockPos blockPos, World world) {
+        CharterComponent component = null;
+        List<CharterComponent> charters = new ArrayList<>(CharterComponents.CHARTERS.get(world).getCharters());
+        for (CharterComponent potentialComponent : charters) {
+            List<Box> boxes = new ArrayList<>(potentialComponent.getAreas());
+            for (Box box : boxes) {
+                if (box.contains(blockPos.getX(), blockPos.getY(), blockPos.getZ()) && box.getCenter().equals(new Vec3d(potentialComponent.getCharterStonePos().getX(), potentialComponent.getCharterStonePos().getY(), potentialComponent.getCharterStonePos().getZ()))) {
+                    component = potentialComponent;
+                }
+            }
+        }
+        return component;
     }
 
 }
