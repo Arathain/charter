@@ -1,31 +1,22 @@
 package net.arathain.charter.block;
 
-import net.arathain.charter.Charter;
-import net.arathain.charter.CharterClient;
 import net.arathain.charter.block.entity.CharterStoneEntity;
-import net.arathain.charter.block.entity.PactPressBlockEntity;
 import net.arathain.charter.block.particle.BindingAmbienceParticleEffect;
 import net.arathain.charter.components.CharterComponent;
 import net.arathain.charter.components.CharterComponents;
 import net.arathain.charter.util.CharterUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.FluidTags;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
@@ -36,7 +27,8 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.Random;
 
 public class CharterStoneBlock extends Block implements Waterloggable, BlockEntityProvider {
         public static final VoxelShape SHAPE = createCuboidShape(2, 0, 2, 14, 32, 14);
@@ -81,7 +73,6 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
                 world.breakBlock(pos, true);
             }
             else {
-
                 if (!CharterUtil.isInCharter((PlayerEntity) placer, world)) {
                     CharterComponents.CHARTERS.get(world).getCharters().add(new CharterComponent(pos, (PlayerEntity) placer, world));
                 } else {

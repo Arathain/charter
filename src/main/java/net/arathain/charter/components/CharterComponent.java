@@ -44,7 +44,7 @@ public class CharterComponent implements SendHelpComponent {
 		this.members.add(this.owner);
 	}
 	public void killCharter() {
-		this.getAreas().forEach(area -> {
+		getAreas().forEach(area -> {
 			BlockState state = world.getBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z));
 			if(state.getBlock() instanceof WaystoneBlock) {
 				world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
@@ -55,13 +55,12 @@ public class CharterComponent implements SendHelpComponent {
 				world.setBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), Charter.BROKEN_CHARTER_STONE.getDefaultState());
 			}
 				});
-		this.getMembers().forEach(member -> {
+		getMembers().forEach(member -> {
 			PlayerEntity player = world.getPlayerByUuid(member);
 			if(player != null) {
 				player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 5));
 			}
 		});
-		System.out.println("final check passed");
 		CharterComponents.CHARTERS.get(world).getCharters().removeIf(charter -> charter.equals(this));
 	}
 
@@ -130,7 +129,10 @@ public class CharterComponent implements SendHelpComponent {
 			if (player != null && Objects.equals(CharterUtil.getCharterAtPos(player.getPos(), player.world), this)) {
 				player.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 1000));
 			}
+			assert player != null;
+			System.out.println(player.getName().asString());
 		}
+
 
 
 	}
