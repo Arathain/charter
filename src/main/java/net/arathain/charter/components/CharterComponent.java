@@ -85,8 +85,9 @@ public class CharterComponent implements SendHelpComponent {
 				assert press != null;
 				if(!press.getItems().isEmpty() && ContractItem.isViable(press.getContract())) {
 					UUID newPotentialUuid = ContractItem.getIndebtedUUID(press.getContract());
-					Optional<UUID> uuid = members.stream().filter(existingUuid -> existingUuid == newPotentialUuid).findFirst();
-					if (uuid.isEmpty()) {
+					List<UUID> membr = new ArrayList<>(members);
+					Optional<UUID> uuid = membr.stream().filter(existingUuid -> existingUuid == newPotentialUuid).findFirst();
+					if (uuid.isEmpty() && !uuid.equals(owner)) {
 						members.add(newPotentialUuid);
 						pactVessels.put(newPotentialUuid, potentialVesselPos);
 					}
@@ -107,7 +108,7 @@ public class CharterComponent implements SendHelpComponent {
 		for(UUID member : memberList) {
 			if (!(member.equals(owner))) {
 				Map<UUID, BlockPos> vessels = new HashMap<>(pactVessels);
-				if (vessels.get(member) == null || !(world.getBlockState(vessels.get(member)).getBlock() instanceof PactPressBlock) || !(world.getBlockState(vessels.get(member)).get(Properties.LIT))) {
+				if (vessels.get(member) == null || !(world.getBlockState(vessels.get(member)).getBlock() instanceof PactPressBlock) || !(world.getBlockState(vessels.get(member)).get(Properties.LIT)) || memberList.stream().filter(existingUuid -> existingUuid == member).count() > 1) {
 					members.remove(member);
 					pactVessels.remove(member);
 					System.out.println("removed UUID for invalid");
@@ -222,13 +223,7 @@ public class CharterComponent implements SendHelpComponent {
 
 		Map<UUID, BlockPos> vessels = new HashMap<>(pactVessels);
 		for(NbtElement member : memberListTag) {
-			UUID memberUUID = NbtHelper.toUuid(member);
-			if (memberUUID.equals(owner)) {
-				members.add(NbtHelper.toUuid(member));
-			} else {
-				members.add(NbtHelper.toUuid(member));
-
-			}
+			members.add(NbtHelper.toUuid(member));
 		}
 	}
 }
