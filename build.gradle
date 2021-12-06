@@ -48,7 +48,7 @@ dependencies {
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${project.cca_version}"
-	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.18:3.0.19'
+	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.18:3.0.22'
 
 }
 
@@ -68,7 +68,7 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
 
 	// Minecraft 1.17 (21w19a) upwards uses Java 16.
-	it.options.release = 16
+	it.options.release = 17
 }
 
 java {

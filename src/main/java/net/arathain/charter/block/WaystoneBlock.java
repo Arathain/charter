@@ -79,18 +79,20 @@ public class WaystoneBlock extends Block implements BlockEntityProvider {
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         super.randomDisplayTick(state, world, pos, random);
-        int i = pos.getX();
-        int j = pos.getY();
-        int k = pos.getZ();
-        double d = (double)i + random.nextDouble();
-        double e = (double)j + 0.7;
-        double f = (double)k + random.nextDouble();
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
-        for (int l = 0; l < 96; ++l) {
-            mutable.set(i + MathHelper.nextInt(random, -10, 10), j - random.nextInt(10), k + MathHelper.nextInt(random, -10, 10));
-            BlockState blockState = world.getBlockState(mutable);
-            if (blockState.isFullCube(world, mutable)) continue;
-            world.addParticle(new BindingAmbienceParticleEffect(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f), (double)mutable.getX() + random.nextDouble() * 6, (double)mutable.getY() + 4 + random.nextDouble() * 5, (double)mutable.getZ() + random.nextDouble() * 6, 0.0, 0.0, 0.0);
+        if(state.get(Properties.LIT)) {
+            int i = pos.getX();
+            int j = pos.getY();
+            int k = pos.getZ();
+            double d = (double) i + random.nextDouble();
+            double e = (double) j + 0.7;
+            double f = (double) k + random.nextDouble();
+            BlockPos.Mutable mutable = new BlockPos.Mutable();
+            for (int l = 0; l < 32; ++l) {
+                mutable.set(i + MathHelper.nextInt(random, -10, 10), j - random.nextInt(10), k + MathHelper.nextInt(random, -10, 10));
+                BlockState blockState = world.getBlockState(mutable);
+                if (blockState.isFullCube(world, mutable)) continue;
+                world.addParticle(new BindingAmbienceParticleEffect(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f), (double) mutable.getX() + random.nextDouble() * 6, (double) mutable.getY() + 4 + random.nextDouble() * 5, (double) mutable.getZ() + random.nextDouble() * 6, 0.0, 0.0, 0.0);
+            }
         }
     }
 

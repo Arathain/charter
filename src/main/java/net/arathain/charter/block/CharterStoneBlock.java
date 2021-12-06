@@ -27,6 +27,8 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -142,13 +144,23 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
 
     @Override
     public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        List<CharterComponent> charters  = new ArrayList<>(CharterComponents.CHARTERS.get(world).getCharters());
+        charters.forEach(charterComponent -> {
+            if(charterComponent.getCharterStonePos().equals(pos)) {
+                charterComponent.killCharter();
+            }
+        });
         super.onBroken(world, pos, state);
-        CharterComponents.CHARTERS.get(world).getCharters().removeIf(charter -> charter.getCharterStonePos().equals(pos));
     }
 
     @Override
     public void onDestroyedByExplosion(World world, BlockPos pos, Explosion explosion) {
+        List<CharterComponent> charters  = new ArrayList<>(CharterComponents.CHARTERS.get(world).getCharters());
+        charters.forEach(charterComponent -> {
+            if(charterComponent.getCharterStonePos().equals(pos)) {
+                charterComponent.killCharter();
+            }
+        });
         super.onDestroyedByExplosion(world, pos, explosion);
-        CharterComponents.CHARTERS.get(world).getCharters().removeIf(charter -> charter.getCharterStonePos().equals(pos));
     }
 }

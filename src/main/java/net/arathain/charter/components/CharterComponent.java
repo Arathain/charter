@@ -77,16 +77,6 @@ public class CharterComponent implements SendHelpComponent {
 			}
 		}
 
-		List<UUID> memberList2 = new ArrayList<>(members);
-		for(UUID member : memberList2) {
-			PlayerEntity player = world.getPlayerByUuid(member);
-			if (player != null && Objects.equals(CharterUtil.getCharterAtPos(player.getPos(), player.world), this)) {
-				player.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 1000));
-			}
-			assert player != null;
-			System.out.println(player.getName().asString());
-		}
-
 
 
 	}

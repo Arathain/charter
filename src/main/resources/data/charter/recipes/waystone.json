@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "DDD",
+    "DED",
+    "DDD"
+  ],
+  "key": {
+    "D": {
+      "item": "deepslate_tiles"
+    },
+    "E": {
+      "item": "ender_pearl"
+    }
+  },
+  "result": {
+    "item": "charter:waystone"
+  }
+}

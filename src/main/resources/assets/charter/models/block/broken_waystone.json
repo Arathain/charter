@@ -3,7 +3,7 @@
 	"texture_size": [56, 30],
 	"textures": {
 		"1": "charter:block/broken_waystone",
-		"particle": "charter:block/broken_waystone"
+		"particle": "minecraft:block/deepslate"
 	},
 	"elements": [
 		{

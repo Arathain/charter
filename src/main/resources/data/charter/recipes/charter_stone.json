@@ -1,0 +1,22 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "DWD",
+    "DFD",
+    "DWD"
+  ],
+  "key": {
+    "D": {
+      "item": "deepslate_tiles"
+    },
+    "F": {
+      "item": "charter:apex_focus"
+    },
+    "W": {
+      "item": "charter:waystone"
+    }
+  },
+  "result": {
+    "item": "charter:charter_stone"
+  }
+}

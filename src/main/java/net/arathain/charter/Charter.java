@@ -17,6 +17,7 @@ import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -53,7 +54,7 @@ public class Charter implements ModInitializer {
 	public static final Block BROKEN_WAYSTONE = new BrokenWaystoneBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).luminance(0));
 	public static final Block SWAPPER = new SwapperBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).luminance(createLightLevelFromPoweredBlockState(10)));
 	public static final Block CHARTER_STONE = new CharterStoneBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).luminance(7).nonOpaque());
-	public static final Block BROKEN_CHARTER_STONE = new BrokenCharterStoneBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).luminance(0).ticksRandomly());
+	public static final Block BROKEN_CHARTER_STONE = new BrokenCharterStoneBlock(FabricBlockSettings.copyOf(Blocks.DEEPSLATE).luminance(0).ticksRandomly());
 	public static BlockEntityType<PactPressBlockEntity> PACT_PRESS_ENTITY;
 	public static BlockEntityType<CharterStoneEntity> CHARTER_STONE_ENTITY;
 	public static BlockEntityType<WaystoneEntity> WAYSTONE_ENTITY;
@@ -81,6 +82,7 @@ public class Charter implements ModInitializer {
 			}
 		});
 		Registry.register(Registry.ITEM, new Identifier(MODID, "charter_stone"), new BlockItem(CHARTER_STONE, new FabricItemSettings().group(ItemGroup.COMBAT)));
+		Registry.register(Registry.ITEM, new Identifier(MODID, "apex_focus"), new Item(new FabricItemSettings().group(ItemGroup.MISC)));
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "charter_stone"), CHARTER_STONE);
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "broken_charter_stone"), BROKEN_CHARTER_STONE);
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "broken_waystone"), BROKEN_WAYSTONE);
