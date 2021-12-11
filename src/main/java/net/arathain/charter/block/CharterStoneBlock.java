@@ -145,22 +145,24 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
     @Override
     public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
         List<CharterComponent> charters  = new ArrayList<>(CharterComponents.CHARTERS.get(world).getCharters());
-        charters.forEach(charterComponent -> {
+        for(CharterComponent charterComponent : charters) {
             if(charterComponent.getCharterStonePos().equals(pos)) {
                 charterComponent.killCharter();
+                break;
             }
-        });
+        }
         super.onBroken(world, pos, state);
     }
 
     @Override
     public void onDestroyedByExplosion(World world, BlockPos pos, Explosion explosion) {
         List<CharterComponent> charters  = new ArrayList<>(CharterComponents.CHARTERS.get(world).getCharters());
-        charters.forEach(charterComponent -> {
+        for(CharterComponent charterComponent : charters) {
             if(charterComponent.getCharterStonePos().equals(pos)) {
                 charterComponent.killCharter();
+                break;
             }
-        });
+        }
         super.onDestroyedByExplosion(world, pos, explosion);
     }
 }

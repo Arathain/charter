@@ -47,6 +47,7 @@ public class Charter implements ModInitializer {
 	public static final StatusEffect SOUL_STRAIN = new CharterStatusEffect(StatusEffectCategory.NEUTRAL, 0x6cf5f5);
 	public static final Block PACT_PRESS = new PactPressBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).breakByTool(FabricItemTags.PICKAXES, 2).requiresTool().luminance(createLightLevelFromLitBlockState(10)).ticksRandomly());
 	public static final Block WAYSTONE = new WaystoneBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).breakByTool(FabricItemTags.PICKAXES, 2).requiresTool().luminance(3).nonOpaque());
+	public static final Block CHARTER_VESSEL = new CharterVesselBlock(FabricBlockSettings.copyOf(Blocks.QUARTZ_BLOCK).breakByTool(FabricItemTags.PICKAXES, 3).requiresTool().nonOpaque().ticksRandomly());
 	public static final Block BROKEN_WAYSTONE = new BrokenWaystoneBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).breakByTool(FabricItemTags.PICKAXES, 2).requiresTool().luminance(0));
 	public static final Block SWAPPER = new SwapperBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_DEEPSLATE).breakByTool(FabricItemTags.PICKAXES, 2).requiresTool().luminance(createLightLevelFromPoweredBlockState(10)));
 	public static final Block CHARTER_STONE = new CharterStoneBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).luminance(7).nonOpaque());
@@ -62,6 +63,8 @@ public class Charter implements ModInitializer {
 		Registry.register(Registry.ITEM, new Identifier(MODID, "pact_press"), new BlockItem(PACT_PRESS, new FabricItemSettings().group(ItemGroup.COMBAT)));
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "pact_press"), PACT_PRESS);
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "waystone"), WAYSTONE);
+		Registry.register(Registry.BLOCK, new Identifier(MODID, "charter_vessel"), CHARTER_VESSEL);
+		Registry.register(Registry.ITEM, new Identifier(MODID, "charter_vessel"), new BlockItem(CHARTER_VESSEL, new FabricItemSettings().group(ItemGroup.COMBAT)));
 		Registry.register(Registry.ITEM, new Identifier(MODID, "waystone"), new BlockItem(WAYSTONE, new FabricItemSettings().group(ItemGroup.COMBAT)));
 		Registry.register(Registry.ITEM, new Identifier(MODID, "swapper"), new BlockItem(SWAPPER, new FabricItemSettings().group(ItemGroup.REDSTONE)));
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "swapper"), SWAPPER);

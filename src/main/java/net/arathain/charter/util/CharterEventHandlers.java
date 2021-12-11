@@ -34,7 +34,6 @@ public class CharterEventHandlers {
             CharterComponent component = CharterUtil.getCharterAtPos(blockPos, world);
             return checkCharter(component, playerEntity);
         });
-
         PlayerBlockBreakEvents.BEFORE.register((world, playerEntity, blockPos, state, blockEntity) -> {
             CharterComponent component = CharterUtil.getCharterAtPos(blockPos, world);
             ActionResult result = checkCharter(component, playerEntity);

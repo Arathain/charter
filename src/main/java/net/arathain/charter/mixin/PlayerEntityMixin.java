@@ -65,6 +65,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                         if(state.getBlock() instanceof WaystoneBlock) {
                             world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
                             world.setBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), Charter.BROKEN_WAYSTONE.getDefaultState());
+                            charter.incrementUses(1000);
                             charter.getAreas().remove(area);
                         }
                         if(state.getBlock() instanceof CharterStoneBlock) {
@@ -82,6 +83,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                                 if(state.getBlock() instanceof WaystoneBlock) {
                                     world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
                                     world.setBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), Charter.BROKEN_WAYSTONE.getDefaultState());
+                                    charter.incrementUses(250);
                                     charter.getAreas().remove(area);
                                 }
                             }

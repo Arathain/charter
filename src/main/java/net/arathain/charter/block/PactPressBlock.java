@@ -45,7 +45,7 @@ public class PactPressBlock extends Block implements BlockEntityProvider, Waterl
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return createCuboidShape(4, 0, 4, 12, 16, 12);
+        return createCuboidShape(6, 0, 6, 10, 14, 10);
     }
 
     @Nullable

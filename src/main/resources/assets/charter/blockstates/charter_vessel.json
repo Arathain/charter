@@ -1,0 +1,35 @@
+{
+  "variants": {
+    "facing=south,lit=false": {
+      "model": "charter:block/charter_vessel"
+    },
+    "facing=west,lit=false": {
+      "model": "charter:block/charter_vessel",
+      "y": 90
+    },
+    "facing=north,lit=false": {
+      "model": "charter:block/charter_vessel",
+      "y": 180
+    },
+    "facing=east,lit=false": {
+      "model": "charter:block/charter_vessel",
+      "y": 270
+    },
+    "facing=south,lit=true": {
+      "model": "charter:block/broken_charter_vessel"
+    },
+    "facing=west,lit=true": {
+      "model": "charter:block/broken_charter_vessel",
+      "y": 90
+    },
+    "facing=north,lit=true": {
+      "model": "charter:block/broken_charter_vessel",
+      "y": 180
+    },
+    "facing=east,lit=true": {
+      "model": "charter:block/broken_charter_vessel",
+      "y": 270
+    }
+
+  }
+}

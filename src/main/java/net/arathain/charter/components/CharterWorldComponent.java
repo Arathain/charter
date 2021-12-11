@@ -21,9 +21,8 @@ public class CharterWorldComponent implements AutoSyncedComponent {
     }
 
     public void tick() {
-        for(CharterComponent charter : charters) {
-            charter.tick();
-        }
+        CharterComponents.CHARTERS.sync(zaWarudo);
+        charters.forEach(CharterComponent::tick);
         CharterComponents.CHARTERS.get(zaWarudo).getCharters().removeIf(charter -> !(zaWarudo.getBlockState(charter.getCharterStonePos()).getBlock() instanceof CharterStoneBlock));
 
         CharterComponents.CHARTERS.sync(zaWarudo);
@@ -31,7 +30,7 @@ public class CharterWorldComponent implements AutoSyncedComponent {
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        NbtList list = tag.getList("charters", 11);
+        NbtList list = tag.getList("charters", 10);
 
         list.forEach(charterCompound -> {
             UUID charterOwner = ((NbtCompound) charterCompound).getCompound(Charter.MODID).getUuid("CharterOwner");
