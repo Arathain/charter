@@ -8,11 +8,6 @@
           "type": "minecraft:item",
           "name": "charter:apex_focus"
         }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
       ]
     }
   ]

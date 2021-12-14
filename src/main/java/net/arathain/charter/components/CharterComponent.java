@@ -80,6 +80,8 @@ public class CharterComponent implements SendHelpComponent {
 				player.addStatusEffect(new StatusEffectInstance(Charter.SOUL_STRAIN, 1000, Math.toIntExact((uses / 10000) - 1)));
 			}
 		}
+		uses++;
+		System.out.println(uses);
 
 	}
 	public void incrementUses(int increment) {
@@ -87,6 +89,13 @@ public class CharterComponent implements SendHelpComponent {
 			this.uses++;
 		} else {
 			this.uses = uses + increment;
+		}
+	}
+	public void decrementUses(int decrement) {
+		if(decrement == 1) {
+			this.uses--;
+		} else {
+			this.uses = uses - decrement;
 		}
 	}
 	public int getUses() {

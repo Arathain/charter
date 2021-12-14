@@ -65,16 +65,16 @@ public class WaystoneBlock extends Block implements BlockEntityProvider {
 
     @Override
     public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-        super.onBroken(world, pos, state);
         List<CharterComponent> charters = new ArrayList<>(CharterComponents.CHARTERS.get(world).getCharters());
         for (CharterComponent potentialComponent : charters) {
             List<Box> boxes = new ArrayList<>(potentialComponent.getAreas());
             for (Box box : boxes) {
-                if (box.getCenter().x == pos.getX() && box.getCenter().y == pos.getY() && box.getCenter().z == pos.getZ()) {
+                if (box != null && box.getCenter().x == pos.getX() && box.getCenter().y == pos.getY() && box.getCenter().z == pos.getZ()) {
                     potentialComponent.getAreas().remove(box);
                 }
             }
         }
+        super.onBroken(world, pos, state);
     }
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
@@ -98,16 +98,16 @@ public class WaystoneBlock extends Block implements BlockEntityProvider {
 
     @Override
     public void onDestroyedByExplosion(World world, BlockPos pos, Explosion explosion) {
-        super.onDestroyedByExplosion(world, pos, explosion);
         List<CharterComponent> charters = new ArrayList<>(CharterComponents.CHARTERS.get(world).getCharters());
         for (CharterComponent potentialComponent : charters) {
             List<Box> boxes = new ArrayList<>(potentialComponent.getAreas());
             for (Box box : boxes) {
-                if (box.getCenter().x == pos.getX() && box.getCenter().y == pos.getY() && box.getCenter().z == pos.getZ()) {
+                if (box != null && box.getCenter().x == pos.getX() && box.getCenter().y == pos.getY() && box.getCenter().z == pos.getZ()) {
                     potentialComponent.getAreas().remove(box);
                 }
             }
         }
+        super.onDestroyedByExplosion(world, pos, explosion);
 
     }
 

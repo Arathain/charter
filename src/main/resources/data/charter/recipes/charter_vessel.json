@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "QIQ",
+    "TST",
+    "QTQ"
+  ],
+  "key": {
+    "T": {
+      "item": "chiseled_quartz_block"
+    },
+    "I": {
+      "item": "iron_ingot"
+    },
+    "Q": {
+      "item": "quartz"
+    },
+    "S": {
+      "item": "amethyst_shard"
+    }
+  },
+  "result": {
+    "item": "charter:charter_vessel"
+  }
+}
+

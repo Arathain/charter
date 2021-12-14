@@ -62,14 +62,15 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 boxes.forEach(area -> {
                     if (area.contains(this.getPos())) {
                         BlockState state = world.getBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z));
-                        if(state.getBlock() instanceof WaystoneBlock) {
-                            world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
-                            world.setBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), Charter.BROKEN_WAYSTONE.getDefaultState());
-                            charter.incrementUses(1000);
-                            charter.getAreas().remove(area);
-                        }
                         if(state.getBlock() instanceof CharterStoneBlock) {
                             charter.killCharter();
+                        }
+                        if(state.getBlock() instanceof WaystoneBlock) {
+                            charter.decrementUses(-1000);
+                            BlockPos pos = new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z);
+                            world.breakBlock(pos, true);
+                            charter.getAreas().remove(area);
+                            world.setBlockState(pos, Charter.BROKEN_WAYSTONE.getDefaultState());
                         }
                     }
                 });
@@ -81,9 +82,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                             if (area.contains(this.getPos())) {
                                 BlockState state = world.getBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z));
                                 if(state.getBlock() instanceof WaystoneBlock) {
-                                    world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
-                                    world.setBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), Charter.BROKEN_WAYSTONE.getDefaultState());
-                                    charter.incrementUses(250);
+                                    charter.decrementUses(-250);
+                                    BlockPos pos = new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z);
+                                    world.breakBlock(pos, true);
+                                    world.setBlockState(pos, Charter.BROKEN_WAYSTONE.getDefaultState());
                                     charter.getAreas().remove(area);
                                 }
                             }
