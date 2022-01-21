@@ -6,14 +6,18 @@ import net.arathain.charter.block.entity.PactPressBlockEntity;
 import net.arathain.charter.block.entity.WaystoneEntity;
 import net.arathain.charter.components.CharterComponents;
 import net.arathain.charter.components.CharterWorldComponent;
+import net.arathain.charter.components.packet.UpdateShadePacket;
 import net.arathain.charter.item.ContractItem;
 import net.arathain.charter.item.EternalSealItem;
 import net.arathain.charter.item.MerchantCrestItem;
 import net.arathain.charter.util.CharterEventHandlers;
+import net.arathain.charter.util.CharterUtil;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.tag.FabricItemTags;
@@ -92,7 +96,10 @@ public class Charter implements ModInitializer {
 				charterWorldComponent.tick();
 			}
 		});
+		EntityElytraEvents.CUSTOM.register(((entity, tickElytra) -> CharterUtil.isCharterOwner(entity, entity.world)));
 		CharterEventHandlers.init();
+		ServerPlayNetworking.registerGlobalReceiver(UpdateShadePacket.ID, UpdateShadePacket::handle);
+
 	}
 	private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
 		return (state) -> (Boolean)state.get(Properties.LIT) ? litLevel : 0;

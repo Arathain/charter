@@ -81,7 +81,6 @@ public class CharterComponent implements SendHelpComponent {
 			}
 		}
 		uses++;
-		System.out.println(uses);
 
 	}
 	public void incrementUses(int increment) {

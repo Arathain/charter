@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface SendHelpComponent {
 
-    List<Box> area = new ArrayList<>();
+    List<Box> area = new ArrayList<>(1);
     List<UUID> members = new ArrayList<>();
 
     BlockPos getCharterStonePos();

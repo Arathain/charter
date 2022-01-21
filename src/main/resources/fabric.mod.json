@@ -27,6 +27,9 @@
     ],
     "cardinal-components-world": [
       "net.arathain.charter.components.CharterComponents"
+    ],
+    "cardinal-components-entity": [
+      "net.arathain.charter.components.CharterComponents"
     ]
   },
   "mixins": [
@@ -34,7 +37,8 @@
   ],
   "custom": {
     "cardinal-components": [
-      "charter:charter_key"
+      "charter:charter_key",
+      "charter:owner"
     ]
   },
 

@@ -5,6 +5,7 @@ import net.arathain.charter.block.entity.PactPressBlockEntity;
 import net.arathain.charter.components.CharterComponent;
 import net.arathain.charter.components.CharterComponents;
 import net.arathain.charter.item.ContractItem;
+import net.arathain.charter.util.CharterUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -62,7 +63,7 @@ public class PactPressBlock extends Block implements BlockEntityProvider, Waterl
             PactPressBlockEntity press = (PactPressBlockEntity) world.getBlockEntity(pos);
             assert press != null;
             if(press.getContract() == ItemStack.EMPTY && ContractItem.isViable(stack)) {
-                if(getCharterStoneComponent(pos, world) != null) {
+                if(getCharterStoneComponent(pos, world) != null && !CharterUtil.isCharterOwner(world.getPlayerByUuid(ContractItem.getIndebtedUUID(stack)), world)) {
                     Objects.requireNonNull(getCharterStoneComponent(pos, world)).getMembers().add(ContractItem.getIndebtedUUID(stack));
                 }
                 world.setBlockState(pos, state.with(Properties.LIT, true));
@@ -74,7 +75,7 @@ public class PactPressBlock extends Block implements BlockEntityProvider, Waterl
                 assert press.getContract() != null;
                 world.spawnEntity(new ItemEntity(world, player.getX(), player.getY() + 0.5, player.getZ(), press.getContract()));
                 if(getCharterStoneComponent(pos, world) != null) {
-                    Objects.requireNonNull(getCharterStoneComponent(pos, world)).getMembers().remove(ContractItem.getIndebtedUUID(press.getContract()));
+                    Objects.requireNonNull(getCharterStoneComponent(pos, world)).getMembers().removeIf(member -> member.equals(ContractItem.getIndebtedUUID(press.getContract())) && !member.equals(getCharterStoneComponent(pos,world).getCharterOwnerUuid()));
                 }
                 ((AelpecyemIsCool) press).clear();
                 press.removeStack(0);
@@ -134,7 +135,7 @@ public class PactPressBlock extends Block implements BlockEntityProvider, Waterl
         if(press != null && press.getContract().getItem() instanceof ContractItem && world.getPlayerByUuid(ContractItem.getIndebtedUUID(press.getContract())) != null) {
             Objects.requireNonNull(world.getPlayerByUuid(ContractItem.getIndebtedUUID(press.getContract()))).kill();
             if(getCharterStoneComponent(pos, world) != null) {
-                Objects.requireNonNull(getCharterStoneComponent(pos, world)).getMembers().remove(ContractItem.getIndebtedUUID(press.getContract()));
+                Objects.requireNonNull(getCharterStoneComponent(pos, world)).getMembers().removeIf(member -> member.equals(ContractItem.getIndebtedUUID(press.getContract())) && !member.equals(getCharterStoneComponent(pos,world).getCharterOwnerUuid()));
             }
         }
 

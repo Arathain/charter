@@ -63,7 +63,6 @@ public class MerchantCrestItem extends Item {
                 user.setStackInHand(hand, setTeleported(stack, true));
                 user.setPosition(player.getPos());
                 user.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 200, 0, false, false));
-                System.out.println(getTeleported(stack));
                 } else {
                     assert stack.getNbt() != null;
                     NbtCompound poss = stack.getNbt().getCompound("prevPos");
@@ -74,7 +73,6 @@ public class MerchantCrestItem extends Item {
                     user.setStackInHand(hand, setTeleported(stack, false));
                     stack.getOrCreateNbt().remove("prevPos");
                     player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 30, 0, false, false));
-                    System.out.println(possX);
                 }
                 player.getItemCooldownManager().set(this, 40);
                 return TypedActionResult.success(user.getStackInHand(hand));

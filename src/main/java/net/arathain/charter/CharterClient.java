@@ -5,11 +5,17 @@ import net.arathain.charter.block.entity.render.CharterStoneRenderer;
 import net.arathain.charter.block.entity.render.WaystoneRenderer;
 import net.arathain.charter.block.particle.BindingAmbienceParticle;
 import net.arathain.charter.block.particle.BindingAmbienceParticleEffect;
+import net.arathain.charter.components.packet.UpdateShadePacket;
+import net.arathain.charter.entity.SlowFallEntity;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.entity.EntityPose;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.util.registry.Registry;
 
@@ -26,5 +32,12 @@ public class CharterClient implements ClientModInitializer {
             }
         });
         ParticleFactoryRegistry.getInstance().register(BINDING, BindingAmbienceParticle.Factory::new);
+        ClientTickEvents.END_WORLD_TICK.register(world -> {
+            PlayerEntity player = MinecraftClient.getInstance().player;
+            if (player != null) {
+                UpdateShadePacket.send(player.getPose() == EntityPose.FALL_FLYING || ((SlowFallEntity) player).isSlowFalling());
+
+            }
+        });
     }
 }

@@ -5,6 +5,7 @@ import net.arathain.charter.block.CharterStoneBlock;
 import net.arathain.charter.block.WaystoneBlock;
 import net.arathain.charter.components.CharterComponent;
 import net.arathain.charter.components.CharterComponents;
+import net.arathain.charter.entity.SlowFallEntity;
 import net.arathain.charter.util.CharterUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -18,10 +19,12 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeKeys;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,10 +35,31 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.*;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends LivingEntity {
+public abstract class PlayerEntityMixin extends LivingEntity implements SlowFallEntity {
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) { super(entityType, world); }
 
     @Shadow protected HungerManager hungerManager;
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    public void headTick(CallbackInfo info) {
+        if(CharterUtil.isCharterOwner(this, this.getWorld())) {
+            if(isFallFlying()) {
+                if(forwardSpeed > 0 && getBlockY() - getAverageHeight() <= 64)
+                    CharterUtil.applySpeed((PlayerEntity) (Object) this);
+                if((isSneaking()) || isSubmergedInWater())
+                    CharterUtil.stopFlying((PlayerEntity) (Object) this);
+            }
+            else {
+                if(isOnGround() || isTouchingWater())
+                    setSlowFalling(false);
+
+                if(isSlowFalling()) {
+                    fallDistance = 0F;
+                    setVelocity(getVelocity().x, -0.02, getVelocity().z);
+                }
+            }
+        }
+    }
 
     @Inject(method = "tick()V", at = @At("TAIL"))
     public void tik(CallbackInfo info) {
@@ -63,7 +87,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                     if (area.contains(this.getPos())) {
                         BlockState state = world.getBlockState(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z));
                         if(state.getBlock() instanceof CharterStoneBlock) {
-                            charter.killCharter();
+                            world.breakBlock(new BlockPos(area.getCenter().x, area.getCenter().y, area.getCenter().z), false);
                         }
                         if(state.getBlock() instanceof WaystoneBlock) {
                             charter.decrementUses(-1000);
@@ -145,6 +169,17 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     }
 
+    @Unique public boolean slowFalling = false;
+    @Override
+    public void setSlowFalling(boolean slowFalling) {
+        this.slowFalling = slowFalling;
+    }
+
+    @Override
+    public boolean isSlowFalling() {
+        return slowFalling;
+    }
+
     @Override
     protected boolean tryUseTotem(DamageSource source) {
         if (this.hasStatusEffect(Charter.ETERNAL_DEBT) && source.isUnblockable()) {
@@ -159,6 +194,18 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         } else {
             return super.tryUseTotem(source);
         }
+    }
+    @Unique
+    public int getAverageHeight() {
+        int averageHeight = 0;
+        int radius = 2;
+        int diameter = (radius * 2) + 1;
+
+        for(int x = -radius; x <= radius; x++)
+            for(int z = -radius; z <= radius; z++)
+                averageHeight += world.getTopY(Heightmap.Type.MOTION_BLOCKING, getBlockX() + x, getBlockZ() + z);
+
+        return averageHeight / (diameter * diameter);
     }
 
 }
