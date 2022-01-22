@@ -122,7 +122,7 @@ public class CharterStoneBlock extends Block implements Waterloggable, BlockEnti
             mutable.set(i + MathHelper.nextInt(random, -10, 10), j - random.nextInt(10), k + MathHelper.nextInt(random, -10, 10));
             BlockState blockState = world.getBlockState(mutable);
             if (blockState.isFullCube(world, mutable)) continue;
-            world.addParticle(new BindingAmbienceParticleEffect(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f), (double)mutable.getX() + (random.nextFloat() - 0.5) * 32, (double)mutable.getY() + 1 + (random.nextFloat() - 0.5) * 22, (double)mutable.getZ() + (random.nextFloat() - 0.5) * 32, 0.0, 0.0, 0.0);
+            world.addParticle(new BindingAmbienceParticleEffect(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f), (double)mutable.getX() + (random.nextFloat() - 0.5) * 32, (double)mutable.getY() + 1 + (random.nextFloat() - 0.5) * 22, (double)mutable.getZ() + (random.nextFloat() - 0.5) * 32, 0.0, 0.0, 0.0);
         }
     }
 

@@ -22,7 +22,7 @@ public class BindingAmbienceParticle extends SpriteBillboardParticle {
 
     private BindingAmbienceParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, BindingAmbienceParticleEffect bindingParticleEffect, SpriteProvider spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
-        this.colorAlpha = 0.0f;
+        this.colorAlpha = bindingParticleEffect.getAlpha();
         this.colorRed = bindingParticleEffect.getRed();
         this.colorGreen = bindingParticleEffect.getGreen();
         this.colorBlue = bindingParticleEffect.getBlue();

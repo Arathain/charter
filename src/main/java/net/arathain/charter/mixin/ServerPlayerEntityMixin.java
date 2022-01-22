@@ -1,8 +1,10 @@
 package net.arathain.charter.mixin;
 
 import com.mojang.authlib.GameProfile;
+import net.arathain.charter.CharterClient;
 import net.arathain.charter.block.CharterStoneBlock;
 import net.arathain.charter.block.WaystoneBlock;
+import net.arathain.charter.block.particle.BindingAmbienceParticleEffect;
 import net.arathain.charter.components.CharterComponent;
 import net.arathain.charter.components.CharterComponents;
 import net.arathain.charter.entity.Indebted;
@@ -38,7 +40,13 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements In
     @Inject(method = "tick", at =@At("HEAD"))
     private void timck(CallbackInfo ci) {
         if(CharterComponents.CHARTER_OWNER_COMPONENT.get(this).isShade()) {
-            Vec3d rotVec = ((SlowFallEntity) this).isSlowFalling() ? this.getRotationVec(1) : new Vec3d(0, 0, 0);
+            Vec3d rotVec = ((SlowFallEntity) this).isSlowFalling() ? this.getRotationVec(1).multiply(0.5) : new Vec3d(0, 0, 0);
+            if (((SlowFallEntity) this).isSlowFalling()) {
+                Vec3d eye1RotVec = this.getRotationVec(1).rotateY(15).multiply(0.2);
+                Vec3d eye2RotVec = this.getRotationVec(1).rotateY(-15).multiply(0.2);
+                this.getWorld().spawnParticles(new BindingAmbienceParticleEffect(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.09f), this.getX() + eye1RotVec.x, this.getEyeY() + eye1RotVec.y, this.getZ() + eye1RotVec.z, 1, 0, 0, 0, 0);
+                this.getWorld().spawnParticles(new BindingAmbienceParticleEffect(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.09f), this.getX() + eye2RotVec.x, this.getEyeY() + eye2RotVec.y, this.getZ() + eye2RotVec.z, 1, 0, 0, 0, 0);
+            }
             for (int i = 0; i < 16; i++) {
                 this.getWorld().spawnParticles(ParticleTypes.LARGE_SMOKE, this.getX() -rotVec.x, this.getEyeY() -rotVec.y, this.getZ() -rotVec.z, 2, -this.getVelocity().x, -this.getVelocity().y, -this.getVelocity().z, 0.01);
             }

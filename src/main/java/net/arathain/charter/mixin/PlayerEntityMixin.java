@@ -46,6 +46,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements SlowFall
             if(isFallFlying()) {
                 if(forwardSpeed > 0 && getBlockY() - getAverageHeight() <= 64)
                     CharterUtil.applySpeed((PlayerEntity) (Object) this);
+                setSlowFalling(false);
                 if((isSneaking()) || isSubmergedInWater())
                     CharterUtil.stopFlying((PlayerEntity) (Object) this);
             }
@@ -55,7 +56,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements SlowFall
 
                 if(isSlowFalling()) {
                     fallDistance = 0F;
-                    setVelocity(getVelocity().x, -0.02, getVelocity().z);
+                    setVelocity(getVelocity().x, -0.0001, getVelocity().z);
                 }
             }
         }

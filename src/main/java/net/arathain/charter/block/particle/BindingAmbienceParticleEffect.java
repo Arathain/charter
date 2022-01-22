@@ -28,6 +28,8 @@ public class BindingAmbienceParticleEffect implements ParticleEffect {
             return bindParticleEffect.greenEvolution;
         }), Codec.FLOAT.fieldOf("be").forGetter((bindParticleEffect) -> {
             return bindParticleEffect.blueEvolution;
+        }), Codec.FLOAT.fieldOf("a").forGetter((bindParticleEffect) -> {
+            return bindParticleEffect.alpha;
         })).apply(instance, BindingAmbienceParticleEffect::new);
     });
     public static final ParticleEffect.Factory<BindingAmbienceParticleEffect> PARAMETERS_FACTORY = new ParticleEffect.Factory<BindingAmbienceParticleEffect>() {
@@ -44,11 +46,13 @@ public class BindingAmbienceParticleEffect implements ParticleEffect {
             float ge = (float) stringReader.readDouble();
             stringReader.expect(' ');
             float be = (float) stringReader.readDouble();
-            return new BindingAmbienceParticleEffect(r, g, b, re, ge, be);
+            stringReader.expect(' ');
+            float a = (float) stringReader.readDouble();
+            return new BindingAmbienceParticleEffect(r, g, b, re, ge, be, a);
         }
 
         public BindingAmbienceParticleEffect read(ParticleType<BindingAmbienceParticleEffect> particleType, PacketByteBuf packetByteBuf) {
-            return new BindingAmbienceParticleEffect(packetByteBuf.readFloat(), packetByteBuf.readFloat(), packetByteBuf.readFloat(), packetByteBuf.readFloat(), packetByteBuf.readFloat(), packetByteBuf.readFloat());
+            return new BindingAmbienceParticleEffect(packetByteBuf.readFloat(), packetByteBuf.readFloat(), packetByteBuf.readFloat(), packetByteBuf.readFloat(), packetByteBuf.readFloat(), packetByteBuf.readFloat(), packetByteBuf.readFloat());
         }
     };
     private final float red;
@@ -57,14 +61,17 @@ public class BindingAmbienceParticleEffect implements ParticleEffect {
     private final float redEvolution;
     private final float greenEvolution;
     private final float blueEvolution;
+    private final float alpha;
 
-    public BindingAmbienceParticleEffect(float red, float green, float blue, float redEvolution, float greenEvolution, float blueEvolution) {
+
+    public BindingAmbienceParticleEffect(float red, float green, float blue, float redEvolution, float greenEvolution, float blueEvolution, float alpha) {
         this.red = red;
         this.green = green;
         this.blue = blue;
         this.redEvolution = redEvolution;
         this.greenEvolution = greenEvolution;
         this.blueEvolution = blueEvolution;
+        this.alpha = alpha;
     }
 
     public void write(PacketByteBuf buf) {
@@ -74,10 +81,11 @@ public class BindingAmbienceParticleEffect implements ParticleEffect {
         buf.writeFloat(this.redEvolution);
         buf.writeFloat(this.greenEvolution);
         buf.writeFloat(this.blueEvolution);
+        buf.writeFloat(this.alpha);
     }
 
     public String asString() {
-        return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %.2f", Registry.PARTICLE_TYPE.getId(this.getType()), this.red, this.green, this.blue, this.redEvolution, this.greenEvolution, this.blueEvolution);
+        return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %.2f %.2f", Registry.PARTICLE_TYPE.getId(this.getType()), this.red, this.green, this.blue, this.redEvolution, this.greenEvolution, this.blueEvolution, this.alpha);
     }
 
     public ParticleType<BindingAmbienceParticleEffect> getType() {
@@ -112,5 +120,10 @@ public class BindingAmbienceParticleEffect implements ParticleEffect {
     @Environment(EnvType.CLIENT)
     public float getBlueEvolution() {
         return blueEvolution;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public float getAlpha() {
+        return alpha;
     }
 }
