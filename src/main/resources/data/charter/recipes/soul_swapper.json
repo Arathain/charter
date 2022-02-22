@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ISI",
+    "BCB",
+    "ISI"
+  ],
+  "key": {
+    "B": {
+      "item": "iron_bars"
+    },
+    "I": {
+      "item": "iron_ingot"
+    },
+    "S": {
+      "tag": "soul_fire_base_blocks"
+    },
+    "C": {
+      "item": "coal_block"
+    }
+  },
+  "result": {
+    "item": "charter:swapper"
+  }
+}

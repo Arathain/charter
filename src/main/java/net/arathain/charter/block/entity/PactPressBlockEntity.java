@@ -30,7 +30,7 @@ public class PactPressBlockEntity extends BlockEntity implements AelpecyemIsCool
     public static void tick(World tickerWorld, BlockPos pos, BlockState tickerState, PactPressBlockEntity blockEntity) {
         if (tickerWorld != null) {
             BlockState state = tickerWorld.getBlockState(pos.offset(Direction.DOWN).offset(Direction.DOWN));
-            if (tickerState.get(Properties.LIT) && blockEntity.isValid(0, blockEntity.getContract()) && state.isOf(Blocks.SOUL_FIRE) || state.isOf(Blocks.SOUL_LANTERN) || state.isOf(Blocks.SOUL_CAMPFIRE) || state.isOf(Blocks.SOUL_TORCH)) {
+            if (tickerState.get(Properties.LIT) && blockEntity.isValid(0, blockEntity.getContract()) && state.isOf(Blocks.SOUL_FIRE) || state.isOf(Blocks.SOUL_LANTERN) || state.isOf(Blocks.SOUL_CAMPFIRE) || state.isOf(Blocks.SOUL_TORCH) || state.isOf(Blocks.SOUL_WALL_TORCH)) {
                 if(!tickerWorld.isClient() && ContractItem.getIndebtedUUID(blockEntity.getContract()) != null && tickerWorld.getPlayerByUuid(ContractItem.getIndebtedUUID(blockEntity.getContract())) != null) {
                     PlayerEntity player = tickerWorld.getPlayerByUuid(ContractItem.getIndebtedUUID(blockEntity.getContract()));
                     assert player != null;
