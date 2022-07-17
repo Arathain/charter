@@ -26,29 +26,29 @@ public class CharterStoneRenderer extends GeoBlockRenderer<CharterStoneEntity> {
     //this is a terrible idea. this is not how this should be done. too bad I can't be bothered to work on this @*^&#$ anymore
     @Override
     public void render(CharterStoneEntity tile, float partialTicks, MatrixStack stack, VertexConsumerProvider bufferIn, int packedLightIn) {
-        GeoModel modelMarks = getGeoModelProvider().getModel(getGeoModelProvider().getModelLocation(tile));
+        GeoModel modelMarks = getGeoModelProvider().getModel(getGeoModelProvider().getModelResource(tile));
         getGeoModelProvider().setLivingAnimations(tile, this.getUniqueID(tile));
         stack.push();
         stack.translate(0, 0.01f, 0);
         stack.translate(0.5, 0, 0.5);
 
-        MinecraftClient.getInstance().getTextureManager().bindTexture(getTextureLocation(tile));
+        MinecraftClient.getInstance().getTextureManager().bindTexture(getTextureResource(tile));
         RenderLayer marksRenderType = getRenderType(tile, partialTicks, stack, bufferIn, null, 15728880,
-                getTextureLocation(tile));
+                getTextureResource(tile));
         render(modelMarks, tile, partialTicks, marksRenderType, stack, bufferIn, null, 15728880, OverlayTexture.DEFAULT_UV,
                 1, 1,
                 1, 1);
         stack.pop();
 
-        GeoModel model = stone.getModel(stone.getModelLocation(tile));
+        GeoModel model = stone.getModel(stone.getModelResource(tile));
         stack.push();
         stack.translate(0, 0.01f, 0);
         stack.translate(0.5, 0, 0.5);
 
-        MinecraftClient.getInstance().getTextureManager().bindTexture(getTextureLocation(tile));
+        MinecraftClient.getInstance().getTextureManager().bindTexture(getTextureResource(tile));
         Color renderColor = getRenderColor(tile, partialTicks, stack, bufferIn, null, packedLightIn);
         RenderLayer renderType = getRenderType(tile, partialTicks, stack, bufferIn, null, packedLightIn,
-                getTextureLocation(tile));
+                getTextureResource(tile));
         render(model, tile, partialTicks, renderType, stack, bufferIn, null, packedLightIn, OverlayTexture.DEFAULT_UV,
                 (float) renderColor.getRed() / 255f, (float) renderColor.getGreen() / 255f,
                 (float) renderColor.getBlue() / 255f, (float) renderColor.getAlpha() / 255);
@@ -57,6 +57,6 @@ public class CharterStoneRenderer extends GeoBlockRenderer<CharterStoneEntity> {
 
     @Override
     public RenderLayer getRenderType(CharterStoneEntity animatable, float partialTicks, MatrixStack stack, VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, Identifier textureLocation) {
-        return RenderLayer.getEntityTranslucent(getTextureLocation(animatable));
+        return RenderLayer.getEntityTranslucent(getTextureResource(animatable));
     }
 }
