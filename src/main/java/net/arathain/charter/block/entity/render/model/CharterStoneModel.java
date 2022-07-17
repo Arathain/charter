@@ -10,7 +10,7 @@ public class CharterStoneModel extends AnimatedGeoModel<CharterStoneEntity> {
     private static final Identifier MODEL_IDENTIFIER = new Identifier(Charter.MODID, "geo/charter_stone.geo.json");
     private static final Identifier ANIMATION_IDENTIFIER = new Identifier(Charter.MODID, "animations/charter_marks.animation.json");
     @Override
-    public Identifier getModelLocation(CharterStoneEntity object) {
+    public Identifier getModelResource(CharterStoneEntity object) {
         return MODEL_IDENTIFIER;
     }
 
