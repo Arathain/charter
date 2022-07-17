@@ -13,8 +13,7 @@ import net.minecraft.util.Identifier;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
-
-import java.awt.*;
+import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 public class CharterStoneRenderer extends GeoBlockRenderer<CharterStoneEntity> {
     AnimatedGeoModel<CharterStoneEntity> stone = new CharterStoneModel();
