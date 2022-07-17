@@ -16,12 +16,12 @@ public class WaystoneModel extends AnimatedGeoModel<WaystoneEntity> {
     }
 
     @Override
-    public Identifier getTextureLocation(WaystoneEntity object) {
+    public Identifier getTextureResource(WaystoneEntity object) {
         return TEXTURE_IDENTIFIER;
     }
 
     @Override
-    public Identifier getAnimationFileLocation(WaystoneEntity animatable) {
+    public Identifier getAnimationFileResource(WaystoneEntity animatable) {
         return ANIMATION_IDENTIFIER;
     }
 
