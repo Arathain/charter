@@ -28,15 +28,15 @@ public class WaystoneRenderer extends GeoBlockRenderer<WaystoneEntity> {
     public void render(WaystoneEntity tile, float partialTicks, MatrixStack stack, VertexConsumerProvider bufferIn, int packedLightIn) {
         super.render(tile, partialTicks, stack, bufferIn, 15728880);
 
-        GeoModel model = stone.getModel(stone.getModelLocation(tile));
+        GeoModel model = stone.getModel(stone.getModelResource(tile));
         stack.push();
         stack.translate(0, 0.01f, 0);
         stack.translate(0.5, 0, 0.5);
 
-        MinecraftClient.getInstance().getTextureManager().bindTexture(getTextureLocation(tile));
+        MinecraftClient.getInstance().getTextureManager().bindTexture(getTextureResource(tile));
         Color renderColor = getRenderColor(tile, partialTicks, stack, bufferIn, null, packedLightIn);
         RenderLayer renderType = getRenderType(tile, partialTicks, stack, bufferIn, null, packedLightIn,
-                getTextureLocation(tile));
+                getTextureResource(tile));
         render(model, tile, partialTicks, renderType, stack, bufferIn, null, packedLightIn, OverlayTexture.DEFAULT_UV,
                 (float) renderColor.getRed() / 255f, (float) renderColor.getGreen() / 255f,
                 (float) renderColor.getBlue() / 255f, (float) renderColor.getAlpha() / 255);
@@ -45,6 +45,6 @@ public class WaystoneRenderer extends GeoBlockRenderer<WaystoneEntity> {
 
     @Override
     public RenderLayer getRenderType(WaystoneEntity animatable, float partialTicks, MatrixStack stack, VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, Identifier textureLocation) {
-        return RenderLayer.getEntityTranslucent(getTextureLocation(animatable));
+        return RenderLayer.getEntityTranslucent(getTextureResource(animatable));
     }
 }
