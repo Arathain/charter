@@ -17,7 +17,7 @@ private static final Identifier MODEL_IDENTIFIER = new Identifier(Charter.MODID,
 private static final Identifier ANIMATION_IDENTIFIER = new Identifier(Charter.MODID, "animations/waystone.animation.json");
 
 @Override
-public Identifier getModelLocation(WaystoneEntity object) {
+public Identifier getModelResource(WaystoneEntity object) {
         return MODEL_IDENTIFIER;
         }
 
