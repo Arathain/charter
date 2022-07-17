@@ -15,12 +15,12 @@ public class CharterStoneModel extends AnimatedGeoModel<CharterStoneEntity> {
     }
 
     @Override
-    public Identifier getTextureLocation(CharterStoneEntity object) {
+    public Identifier getTextureResource(CharterStoneEntity object) {
         return TEXTURE_IDENTIFIER;
     }
 
     @Override
-    public Identifier getAnimationFileLocation(CharterStoneEntity animatable) {
+    public Identifier getAnimationFileResource(CharterStoneEntity animatable) {
         return ANIMATION_IDENTIFIER;
     }
 
