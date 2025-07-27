@@ -1,5 +1,2 @@
 # Charter
-
-## License
-
-CC0
+waow
